@@ -6,6 +6,7 @@ import (
 
 	"brainrot-lang/lexer"
 	"brainrot-lang/utils"
+	// "brainrot-lang/parser"
 )
 
 func main() {
@@ -61,4 +62,9 @@ func runFile(filename string) {
 
 	// Print lexical table
 	utils.PrintLexicalTable(tokens)
+
+
+	// Step 2: Parser
+	// p := parser.New(tokens)
+    // program := p.Parse()
 }
