@@ -15,37 +15,33 @@ const (
 	FLOAT  TokenType = "FLOAT"  // float
 	STRING TokenType = "STRING" // string
 	// ── BrainRot Keywords ──────────────────────
-	//  ngl          → var       ("not gonna lie")
-	//  say_my_name  → print     (Breaking Bad - Heisenberg)
-	//  bet          → if        (TikTok/Gen Z)
-	//  nope         → else      (internet classic)
-	//  rizz_while   → while     (Rizzler meme 2024)
-	//  grind_for    → for       (hustle culture)
-	//  let_him_cook → func      ("let him cook" 2023)
-	//  served       → return    ("she served")
-	//  fr_fr        → true      (Gen Z no cap)
-	//  cap          → false     (cap/no cap)
-	//  ghosted      → nil/null  (dating meme)
-	//  slay         → break     (slay meme)
-	//  pushing      → continue  ("keep pushing")
-	//  no_cap       → &&        (no cap slang)
-	//  or_what      → ||        ("or what??" meme)
+	//  trust_me_bro   → var       ("trust me bro")
+	//  say_my_name    → print     (Breaking Bad - Heisenberg)
+	//  chat_is_this_real → if     (is this real? caption)
+	//  nah_bro        → else      ("nah bro" response)
+	//  on_repeat      → while     (on repeat cycle)
+	//  run_it_back    → for       (run it back loop)
+	//  let_him_cook   → func      ("let him cook" 2023)
+	//  take_this      → return    ("take this" send off)
+	//  fr_fr          → true      (Gen Z no cap)
+	//  cap            → false     (cap/no cap)
+	//  ghosted        → nil/null  (dating meme)
+	//  mission_abort  → break     (abort mission)
+	//  skip_this_one  → continue  ("skip this one")
 
-	VAR         TokenType = "ngl"
-	PRINT       TokenType = "say_my_name"
-	IF          TokenType = "bet"
-	ELSE        TokenType = "nope"
-	WHILE       TokenType = "rizz_while"
-	FOR         TokenType = "grind_for"
-	FUNC        TokenType = "let_him_cook"
-	RETURN      TokenType = "served"
-	TRUE        TokenType = "fr_fr"
-	FALSE       TokenType = "cap"
-	NIL         TokenType = "ghosted"
-	BREAK       TokenType = "slay"
-	CONTINUE    TokenType = "pushing"
-	LOGICAL_AND TokenType = "no_cap"
-	LOGICAL_OR  TokenType = "or_what"
+	VAR      TokenType = "trust_me_bro"
+	PRINT    TokenType = "say_my_name"
+	IF       TokenType = "chat_is_this_real"
+	ELSE     TokenType = "nah_bro"
+	WHILE    TokenType = "on_repeat"
+	FOR      TokenType = "run_it_back"
+	FUNC     TokenType = "let_him_cook"
+	RETURN   TokenType = "take_this"
+	TRUE     TokenType = "fr_fr"
+	FALSE    TokenType = "cap"
+	NIL      TokenType = "ghosted"
+	BREAK    TokenType = "mission_abort"
+	CONTINUE TokenType = "skip_this_one"
 
 	// ── Arithmetic Operators ───────────────────
 	PLUS     TokenType = "+"
@@ -99,22 +95,19 @@ type Token struct {
 
 // Keywords map
 var keywords = map[string]TokenType{
-	"ngl":         VAR,
-	"say_my_name": PRINT,
-	"bet":         IF,
-	"nope":        ELSE,
-
-	"rizz_while":   WHILE,
-	"grind_for":    FOR,
-	"let_him_cook": FUNC,
-	"served":       RETURN,
-	"fr_fr":        TRUE,
-	"cap":          FALSE,
-	"ghosted":      NIL,
-	"slay":         BREAK,
-	"pushing":      CONTINUE,
-	"no_cap":       LOGICAL_AND,
-	"or_what":      LOGICAL_OR,
+	"trust_me_bro":      VAR,
+	"say_my_name":       PRINT,
+	"chat_is_this_real": IF,
+	"nah_bro":           ELSE,
+	"on_repeat":         WHILE,
+	"run_it_back":       FOR,
+	"let_him_cook":      FUNC,
+	"take_this":         RETURN,
+	"fr_fr":             TRUE,
+	"cap":               FALSE,
+	"ghosted":           NIL,
+	"mission_abort":     BREAK,
+	"skip_this_one":     CONTINUE,
 }
 
 // LookupIdent checks if a word is a BrainRot keyword or a variable name

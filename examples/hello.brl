@@ -1,10 +1,12 @@
-ngl name = "Walter White"
-ngl age = 52
-say_my_name("my name is " + name)
+let_him_cook main(){
+    trust_me_bro name = "Walter White"
+    trust_me_bro age = 52
+    say_my_name("my name is " + name)
 
-bet age >= 18 {
-  say_my_name("ur built different")
-}
-nope {
-  say_my_name("ur cooked bro")
+    chat_is_this_real age >= 18 {
+        say_my_name("ur built different")
+    }
+    nah_bro {
+        say_my_name("ur cooked bro")
+    }
 }

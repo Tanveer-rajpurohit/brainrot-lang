@@ -35,8 +35,7 @@ func GetTokenCategory(tokType lexer.TokenType) string {
 	}
 
 	// Logical
-	if tokType == lexer.AND || tokType == lexer.OR || tokType == lexer.NOT ||
-		tokType == lexer.LOGICAL_AND || tokType == lexer.LOGICAL_OR {
+	if tokType == lexer.AND || tokType == lexer.OR || tokType == lexer.NOT {
 		return "LOGICAL"
 	}
 
