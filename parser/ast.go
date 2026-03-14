@@ -1,246 +1,206 @@
 package parser
 
-//  INTERFACES  — every node must satisfy one
+//BASE TYPES  — written ONCE, embedded everywhere
+type stmtNode struct { Line int }
+func (s stmtNode) statementNode() {}
+func (s stmtNode) GetLine() int { return s.Line }
 
-// ANY node that is an expression must implement this
+type exprNode  struct { Line int }
+func (e exprNode) expressionNode() {}
+func (e exprNode) GetLine() int { return e.Line }
+
+
+//  INTERFACES
 type Expression interface {
 	expressionNode()
 	GetLine() int
 }
-
-// ANY node that is a statement must implement this
+ 
 type Statement interface {
 	statementNode()
 	GetLine() int
 }
 
-//  ROOT NODE
-// Program is the root of every AST — holds all top-level statements
+
+//ROOT NODE
+
 type Program struct {
 	Statements []Statement
 }
 
-//  STATEMENTS
+
+// STATEMENT NODES
 
 // trust_me_bro x = 42
 type VarStatement struct {
-	Line  int
-	Name  string
-	Value Expression
+	stmtNode  // ← Line + statementNode() + GetLine()
+	name  string // x
+	value Expression // 42
 }
 
-func (vs *VarStatement) statementNode() {}
-func (vs *VarStatement) GetLine() int   { return vs.Line }
-
-// x = 42  or  x += 1  (reassignment, not declaration)
+// x = 42   x += 1   x -= 1   (re-assignment, not declaration)
 type AssignStatement struct {
-	Line     int
+	stmtNode
 	Name     string
-	Operator string // "=", "+=", "-="
+	Operator string // "=" | "+=" | "-="
 	Value    Expression
 }
 
-func (as *AssignStatement) statementNode() {}
-func (as *AssignStatement) GetLine() int   { return as.Line }
-
-// say_my_name("hello")
+// say_my_name("hello world")
 type PrintStatement struct {
-	Line  int
+	stmtNode
 	Value Expression
 }
-
-func (ps *PrintStatement) statementNode() {}
-func (ps *PrintStatement) GetLine() int   { return ps.Line }
 
 // take_this x + 1
 type ReturnStatement struct {
-	Line  int
-	Value Expression
+	stmtNode
+	Value Expression // nil = bare "take_this" with no value
 }
-
-func (rs *ReturnStatement) statementNode() {}
-func (rs *ReturnStatement) GetLine() int   { return rs.Line }
 
 // mission_abort
 type BreakStatement struct {
-	Line int
+	stmtNode
 }
-
-func (bs *BreakStatement) statementNode() {}
-func (bs *BreakStatement) GetLine() int   { return bs.Line }
 
 // skip_this_one
 type ContinueStatement struct {
-	Line int
+	stmtNode
 }
 
-func (cs *ContinueStatement) statementNode() {}
-func (cs *ContinueStatement) GetLine() int   { return cs.Line }
-
-// { ... }  — a block of statements used inside if/while/func
+// { statement1; statement2; ... }
+// Used as the body of if / while / for / func
 type BlockStatement struct {
-	Line       int
+	stmtNode
 	Statements []Statement
 }
 
-func (bl *BlockStatement) statementNode() {}
-func (bl *BlockStatement) GetLine() int   { return bl.Line }
-
-// chat_is_this_real age >= 18 { ... } nah_bro { ... }
+// chat_is_this_real age >= 18 { ... }
+// wait_hold_up age >= 5  { ... }   ← zero or more
+// nah_bro                { ... }   ← optional
 type IfStatement struct {
-	Line        int
+	stmtNode
 	Condition   Expression
 	Consequence *BlockStatement
-	Alternative *BlockStatement // nil if no nah_bro branch
+	ElseIf      []*ElseIfClause  // wait_hold_up chains (can be empty)
+	Alternative *BlockStatement  // nah_bro block (can be nil)
 }
 
-func (is *IfStatement) statementNode() {}
-func (is *IfStatement) GetLine() int   { return is.Line }
-
-// on_repeat x < 10 { ... }
-type WhileStatement struct {
-	Line      int
+// wait_hold_up x > 5 { ... }
+type ElseIfClause struct {
+	stmtNode
 	Condition Expression
 	Body      *BlockStatement
 }
 
-func (ws *WhileStatement) statementNode() {}
-func (ws *WhileStatement) GetLine() int   { return ws.Line }
+// on_repeat x < 10 { ... }
+type WhileStatement struct {
+	stmtNode
+	Condition Expression
+	Body      *BlockStatement
+}
 
-// run_it_back i = 0; i < 10; i += 1 { ... }
+// run_it_back (i = 0; i < 10; i += 1) { ... }
 type ForStatement struct {
-	Line      int
-	Init      Statement  // trust_me_bro i = 0
+	stmtNode
+	Init      Statement  // trust_me_bro i = 0  OR  i = 0
 	Condition Expression // i < 10
 	Post      Statement  // i += 1
 	Body      *BlockStatement
 }
-
-func (fs *ForStatement) statementNode() {}
-func (fs *ForStatement) GetLine() int   { return fs.Line }
-
+ 
 // let_him_cook add(a, b) { ... }
 type FuncStatement struct {
-	Line   int
+	stmtNode
 	Name   string
-	Params []string // parameter names
+	Params []string
 	Body   *BlockStatement
 }
 
-func (fn *FuncStatement) statementNode() {}
-func (fn *FuncStatement) GetLine() int   { return fn.Line }
-
-// a bare expression used as a statement, e.g. a function call: add(1, 2)
+// add(1, 2)  used as a standalone statement on its own line
+// Without this wrapper, CallExpression can't go into []Statement
 type ExpressionStatement struct {
-	Line  int
+	stmtNode
 	Value Expression
 }
 
-func (es *ExpressionStatement) statementNode() {}
-func (es *ExpressionStatement) GetLine() int   { return es.Line }
+
+//  EXPRESSIONS NODES
 
 
-
-//  EXPRESSIONS  (things that produce a value)
 // 42
 type IntegerLiteral struct {
-	Line  int
+	exprNode
 	Value int64
 }
-
-func (il *IntegerLiteral) expressionNode() {}
-func (il *IntegerLiteral) GetLine() int    { return il.Line }
-
+ 
 // 3.14
 type FloatLiteral struct {
-	Line  int
+	exprNode
 	Value float64
 }
-
-func (fl *FloatLiteral) expressionNode() {}
-func (fl *FloatLiteral) GetLine() int    { return fl.Line }
-
-// "hello"
+ 
+// "hello walter"
 type StringLiteral struct {
-	Line  int
+	exprNode
 	Value string
 }
-
-func (sl *StringLiteral) expressionNode() {}
-func (sl *StringLiteral) GetLine() int    { return sl.Line }
-
+ 
 // fr_fr  or  cap
 type BoolLiteral struct {
-	Line  int
+	exprNode
 	Value bool
 }
-
-func (bl *BoolLiteral) expressionNode() {}
-func (bl *BoolLiteral) GetLine() int    { return bl.Line }
-
+ 
 // ghosted
 type NilLiteral struct {
-	Line int
+	exprNode
 }
-
-func (nl *NilLiteral) expressionNode() {}
-func (nl *NilLiteral) GetLine() int    { return nl.Line }
-
-// x  (a variable name used in an expression)
+ 
+// x  myVar  name  (variable reference in an expression)
 type Identifier struct {
-	Line int
+	exprNode
 	Name string
 }
 
-func (id *Identifier) expressionNode() {}
-func (id *Identifier) GetLine() int    { return id.Line }
-
-// x + y  |  x == y  |  x && y  etc.
+// left OP right   ->   x + y   age >= 18   a == b   x && y
 type InfixExpression struct {
-	Line     int
+	exprNode
 	Left     Expression
-	Operator string // "+", "-", "==", "!=", "<", ">", "&&", "||", ...
+	Operator string
 	Right    Expression
 }
-
-func (ie *InfixExpression) expressionNode() {}
-func (ie *InfixExpression) GetLine() int    { return ie.Line }
-
-// -x  or  !x
+ 
+// OP right   ->   !done   -x
 type PrefixExpression struct {
-	Line     int
-	Operator string // "-" or "!"
+	exprNode
+	Operator string
 	Right    Expression
 }
 
-func (pe *PrefixExpression) expressionNode() {}
-func (pe *PrefixExpression) GetLine() int    { return pe.Line }
+// OP left  ->   i++   i--
+type PostfixExpression struct {
+	exprNode
+	Operator string
+	Left     Expression
+}
 
-// add(1, 2)
+// callee(arg1, arg2)
 type CallExpression struct {
-	Line      int
-	Function  Expression // usually an Identifier, but can be any expression
+	exprNode
+	Function  Expression
 	Arguments []Expression
 }
-
-func (ce *CallExpression) expressionNode() {}
-func (ce *CallExpression) GetLine() int    { return ce.Line }
-
+ 
 // [1, 2, 3]
 type ArrayLiteral struct {
-	Line     int
+	exprNode
 	Elements []Expression
 }
-
-func (al *ArrayLiteral) expressionNode() {}
-func (al *ArrayLiteral) GetLine() int    { return al.Line }
-
-// arr[0]
+ 
+// arr[0]   arr[i], arr[i + 1]
 type IndexExpression struct {
-	Line  int
-	Left  Expression // the array/object
-	Index Expression // the index
+	exprNode
+	Left  Expression // the array -> arr
+	Index Expression // the index value -> value inside []
 }
-
-func (ix *IndexExpression) expressionNode() {}
-func (ix *IndexExpression) GetLine() int    { return ix.Line }
