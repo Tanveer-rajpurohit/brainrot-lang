@@ -1,0 +1,10 @@
+ngl name = "Walter White"
+ngl age = 52
+say_my_name("my name is " + name)
+
+bet age >= 18 {
+  say_my_name("ur built different")
+}
+nope {
+  say_my_name("ur cooked bro")
+}
