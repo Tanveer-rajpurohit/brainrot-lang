@@ -6,7 +6,7 @@ import (
 
 	"brainrot-lang/lexer"
 	"brainrot-lang/utils"
-	// "brainrot-lang/parser"
+	"brainrot-lang/parser"
 )
 
 func main() {
@@ -65,6 +65,10 @@ func runFile(filename string) {
 
 
 	// Step 2: Parser
-	// p := parser.New(tokens)
-    // program := p.Parse()
+	p := parser.New(tokens)
+    program := p.Parse()
+
+	//log the AST
+	fmt.Printf("\n%s[AST OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
+	fmt.Printf("%#v\n", program)
 }
