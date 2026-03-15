@@ -28,10 +28,12 @@ const (
 	//  ghosted        → nil/null  (dating meme)
 	//  mission_abort  → break     (abort mission)
 	//  skip_this_one  → continue  ("skip this one")
+	//  wait_hold_up   → else if   ("wait, hold up")
 
 	VAR      TokenType = "trust_me_bro"
 	PRINT    TokenType = "say_my_name"
 	IF       TokenType = "chat_is_this_real"
+	ELSE_IF  TokenType = "wait_hold_up"
 	ELSE     TokenType = "nah_bro"
 	WHILE    TokenType = "on_repeat"
 	FOR      TokenType = "run_it_back"
@@ -98,6 +100,7 @@ var keywords = map[string]TokenType{
 	"trust_me_bro":      VAR,
 	"say_my_name":       PRINT,
 	"chat_is_this_real": IF,
+	"wait_hold_up":      ELSE_IF,
 	"nah_bro":           ELSE,
 	"on_repeat":         WHILE,
 	"run_it_back":       FOR,
