@@ -23,9 +23,8 @@ import (
 //                                             └── parsePostfix  i++ i--
 //                                                   └── parsePrimary  42 "hi" x
 
-
 func (p *Parser) parseExpression() Expression {
-    return p.parseOr()
+	return p.parseOr()
 }
 
 // "a || b || c"
@@ -151,21 +150,21 @@ func (p *Parser) parseUnary() Expression {
 		p.advance()
 		right := p.parseUnary()
 		return &PrefixExpression{
-				exprNode: exprNode{Line: tok.Line}, 
-				Operator: tok.Literal, 
-				Right: right,
+			exprNode: exprNode{Line: tok.Line},
+			Operator: tok.Literal,
+			Right:    right,
 		}
 
 	}
 	return p.parsePostfix()
 }
 
-//i++ and i--
+// i++ and i--
 func (p *Parser) parsePostfix() Expression {
 	left := p.parsePrimary()
 
 	if p.current().Type == lexer.INCREMENT || p.current().Type == lexer.DECREMENT {
-		op := p.current().Literal  
+		op := p.current().Literal
 		line := p.current().Line
 		p.advance()
 		return &PostfixExpression{
@@ -182,7 +181,7 @@ func (p *Parser) parsePrimary() Expression {
 
 	switch tok.Type {
 	// 42
-    case lexer.INT:
+	case lexer.INT:
 		p.advance()
 		val, err := strconv.ParseInt(tok.Literal, 10, 64)
 		if err != nil {
@@ -192,7 +191,7 @@ func (p *Parser) parsePrimary() Expression {
 			return nil
 		}
 		return &IntegerLiteral{exprNode: exprNode{Line: tok.Line}, Value: val}
-	
+
 	// 3.14
 	case lexer.FLOAT:
 		p.advance()
@@ -210,108 +209,103 @@ func (p *Parser) parsePrimary() Expression {
 		p.advance()
 		return &StringLiteral{exprNode: exprNode{Line: tok.Line}, Value: tok.Literal}
 
-	
 	// fr_fr → true
-    case lexer.TRUE:
-        p.advance()
-        return &BoolLiteral{exprNode: exprNode{Line: tok.Line}, Value: true}
+	case lexer.TRUE:
+		p.advance()
+		return &BoolLiteral{exprNode: exprNode{Line: tok.Line}, Value: true}
 
-    // cap → false
-    case lexer.FALSE:
-        p.advance()
-        return &BoolLiteral{exprNode: exprNode{Line: tok.Line}, Value: false}
+	// cap → false
+	case lexer.FALSE:
+		p.advance()
+		return &BoolLiteral{exprNode: exprNode{Line: tok.Line}, Value: false}
 
 	// ghosted → nil
-    case lexer.NIL:
-        p.advance()
-        return &NilLiteral{exprNode: exprNode{Line: tok.Line}}
+	case lexer.NIL:
+		p.advance()
+		return &NilLiteral{exprNode: exprNode{Line: tok.Line}}
 
 	// x  OR  add(1, 2)
 	case lexer.IDENT:
 		p.advance()
 		if p.current().Type == lexer.LPAREN {
-            return p.parseCallExpression(tok) // tok carries the function name
-        }
-		 if p.current().Type == lexer.LBRACKET {
-            ident := &Identifier{exprNode: exprNode{Line: tok.Line}, Name: tok.Literal}
-            return p.parseIndexExpression(ident)
-        }
+			return p.parseCallExpression(tok) // tok carries the function name
+		}
+		if p.current().Type == lexer.LBRACKET {
+			ident := &Identifier{exprNode: exprNode{Line: tok.Line}, Name: tok.Literal}
+			return p.parseIndexExpression(ident)
+		}
 
 		return &Identifier{exprNode: exprNode{Line: tok.Line}, Name: tok.Literal}
 
-
 	// [1, 2, 3]
-    case lexer.LBRACKET:
-        return p.parseArrayLiteral()
+	case lexer.LBRACKET:
+		return p.parseArrayLiteral()
 
-
-    // (x + 1)  — grouped expression
-    case lexer.LPAREN:
-        p.advance()  
-        expr := p.parseExpression()
-        p.expect(lexer.RPAREN) 
-        return expr 
+	// (x + 1)  — grouped expression
+	case lexer.LPAREN:
+		p.advance()
+		expr := p.parseExpression()
+		p.expect(lexer.RPAREN)
+		return expr
 
 	default:
-        p.errors = append(p.errors, fmt.Sprintf(
-            "[Skill Issue] unexpected token '%s' at line %d",
-            tok.Literal, tok.Line,
-        ))
-        p.advance()
-        return nil
-	
+		p.errors = append(p.errors, fmt.Sprintf(
+			"[Skill Issue] unexpected token '%s' at line %d",
+			tok.Literal, tok.Line,
+		))
+		p.advance()
+		return nil
+
 	}
 }
-
 
 func (p *Parser) parseCallExpression(fn lexer.Token) Expression {
 	call := &CallExpression{
 		exprNode: exprNode{Line: fn.Line},
 		Function: &Identifier{exprNode: exprNode{Line: fn.Line}, Name: fn.Literal},
 	}
- 
+
 	p.expect(lexer.LPAREN)
- 
+
 	// no arguments: add()
 	if p.current().Type == lexer.RPAREN {
 		p.advance()
 		return call
 	}
- 
+
 	// first argument
 	call.Arguments = append(call.Arguments, p.parseExpression())
- 
+
 	// more arguments separated by commas: add(1, 2, 3)
 	for p.current().Type == lexer.COMMA {
 		p.advance()
 		call.Arguments = append(call.Arguments, p.parseExpression())
 	}
- 
+
 	p.expect(lexer.RPAREN)
 	return call
 }
 
-
 func (p *Parser) parseArrayLiteral() Expression {
 	arr := &ArrayLiteral{exprNode: exprNode{Line: p.current().Line}}
 	p.expect(lexer.LBRACKET)
- 
+
 	// empty array: []
 	if p.current().Type == lexer.RBRACKET {
 		p.advance()
 		return arr
 	}
- 
+
 	// first element
 	arr.Elements = append(arr.Elements, p.parseExpression())
- 
+
 	// more elements: [1, 2, 3]
 	for p.current().Type == lexer.COMMA {
 		p.advance()
 		arr.Elements = append(arr.Elements, p.parseExpression())
 	}
- 
-	p.expect(lexer.RBRACKET) 
+
+	p.expect(lexer.RBRACKET)
 
 	return arr
 }

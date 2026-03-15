@@ -9,19 +9,18 @@ import (
 func (p *Parser) parseVarStatement() *VarStatement {
 	stmt := &VarStatement{stmtNode: stmtNode{Line: p.current().Line}}
 
-	p.expect(lexer.VAR)                    // consume "trust_me_bro"
-	nameToken := p.expect(lexer.IDENT)     // consume "x", grab the name
+	p.expect(lexer.VAR)                // consume "trust_me_bro"
+	nameToken := p.expect(lexer.IDENT) // consume "x", grab the name
 	stmt.Name = nameToken.Literal
 
-	p.expect(lexer.ASSIGN)                 // consume "="
-	stmt.Value = p.parseExpression()       // parse whatever is on the right
+	p.expect(lexer.ASSIGN)           // consume "="
+	stmt.Value = p.parseExpression() // parse whatever is on the right
 
 	return stmt
 }
 
-
 func (p *Parser) parsePrintStatement() *PrintStatement {
-	stmt := &PrintStatement{stmtNode: stmtNode{Line : p.current().Line}}
+	stmt := &PrintStatement{stmtNode: stmtNode{Line: p.current().Line}}
 
 	p.expect(lexer.PRINT)
 	p.expect(lexer.LPAREN)
@@ -30,7 +29,6 @@ func (p *Parser) parsePrintStatement() *PrintStatement {
 
 	return stmt
 }
-
 
 func (p *Parser) parseIfStatement() *IfStatement {
 	stmt := &IfStatement{stmtNode: stmtNode{Line: p.current().Line}}
@@ -47,10 +45,8 @@ func (p *Parser) parseIfStatement() *IfStatement {
 		stmt.Alternative = p.parseElseStatement()
 	}
 
-
 	return stmt
 }
-
 
 func (p *Parser) parseElseIfStatement() []*ElseIfClause {
 	var elseIfs []*ElseIfClause
@@ -69,12 +65,10 @@ func (p *Parser) parseElseIfStatement() []*ElseIfClause {
 	return elseIfs
 }
 
-
 func (p *Parser) parseElseStatement() *BlockStatement {
 	p.expect(lexer.ELSE)
 	return p.parseBlockStatement()
 }
-
 
 func (p *Parser) parseWhileStatement() *WhileStatement {
 
@@ -88,7 +82,6 @@ func (p *Parser) parseWhileStatement() *WhileStatement {
 
 }
 
-
 func (p *Parser) parseForStatement() *ForStatement {
 	stmt := &ForStatement{stmtNode: stmtNode{Line: p.current().Line}}
 	p.expect(lexer.FOR)
@@ -100,21 +93,20 @@ func (p *Parser) parseForStatement() *ForStatement {
 		stmt.Init = p.parseAssignStatement() // i = 0
 	} else {
 		p.errors = append(p.errors, fmt.Sprintf(
-            "[Skill Issue] \nexpected variable declaration or assignment but got '%s' at line %d",
+			"[Skill Issue] \nexpected variable declaration or assignment but got '%s' at line %d",
 			p.current().Literal, p.current().Line,
 		))
 	}
 
-	p.expect(lexer.SEMICOLON) 
+	p.expect(lexer.SEMICOLON)
 	stmt.Condition = p.parseExpression() // i < 10
-	p.expect(lexer.SEMICOLON)  
+	p.expect(lexer.SEMICOLON)
 	stmt.Post = p.parseAssignStatement() // i += 1
-	
+
 	stmt.Body = p.parseBlockStatement()
 
 	return stmt
 }
-
 
 func (p *Parser) parseFuncStatement() *FuncStatement {
 	stmt := &FuncStatement{stmtNode: stmtNode{Line: p.current().Line}}
@@ -141,19 +133,17 @@ func (p *Parser) parseFuncStatement() *FuncStatement {
 	return stmt
 }
 
-
 func (p *Parser) parseReturnStatement() *ReturnStatement {
 	stmt := &ReturnStatement{stmtNode: stmtNode{Line: p.current().Line}}
 	p.expect(lexer.RETURN)
 	if p.current().Type == lexer.NEWLINE || p.current().Type == lexer.RBRACE || p.current().Type == lexer.EOF {
-    	stmt.Value = nil  // bare return
+		stmt.Value = nil // bare return
 	} else {
-    	stmt.Value = p.parseExpression()
+		stmt.Value = p.parseExpression()
 	}
 
 	return stmt
 }
-
 
 func (p *Parser) parseBreakStatement() *BreakStatement {
 	stmt := &BreakStatement{stmtNode: stmtNode{Line: p.current().Line}}
@@ -163,7 +153,6 @@ func (p *Parser) parseBreakStatement() *BreakStatement {
 	return stmt
 }
 
-
 func (p *Parser) parseContinueStatement() *ContinueStatement {
 	stmt := &ContinueStatement{stmtNode: stmtNode{Line: p.current().Line}}
 
@@ -172,12 +161,11 @@ func (p *Parser) parseContinueStatement() *ContinueStatement {
 	return stmt
 }
 
-
 func (p *Parser) parseBlockStatement() *BlockStatement {
 	stmt := &BlockStatement{stmtNode: stmtNode{Line: p.current().Line}}
 
 	p.expect(lexer.LBRACE)
-	
+
 	for p.current().Type != lexer.RBRACE && p.current().Type != lexer.EOF {
 		s := p.parseStatement()
 		if s != nil {
@@ -191,30 +179,28 @@ func (p *Parser) parseBlockStatement() *BlockStatement {
 	return stmt
 }
 
-
 func (p *Parser) parseAssignStatement() *AssignStatement {
 	stmt := &AssignStatement{stmtNode: stmtNode{Line: p.current().Line}}
 
-	stmt.Name =  p.expect(lexer.IDENT).Literal
+	stmt.Name = p.expect(lexer.IDENT).Literal
 
 	switch p.current().Type {
-    case lexer.ASSIGN, lexer.PLUS_ASSIGN, lexer.MINUS_ASSIGN,
-         lexer.ASTERISK_ASSIGN, lexer.SLASH_ASSIGN:
-        stmt.Operator = p.current().Literal
-        p.advance()
-		
-    default:
-        p.errors = append(p.errors, fmt.Sprintf(
-            "[Skill Issue] \nexpected assignment operator but got '%s' at line %d",
-            p.current().Literal, p.current().Line,
-        ))
-    }
+	case lexer.ASSIGN, lexer.PLUS_ASSIGN, lexer.MINUS_ASSIGN,
+		lexer.ASTERISK_ASSIGN, lexer.SLASH_ASSIGN:
+		stmt.Operator = p.current().Literal
+		p.advance()
+
+	default:
+		p.errors = append(p.errors, fmt.Sprintf(
+			"[Skill Issue] \nexpected assignment operator but got '%s' at line %d",
+			p.current().Literal, p.current().Line,
+		))
+	}
 
 	stmt.Value = p.parseExpression()
 
 	return stmt
 }
-
 
 func (p *Parser) parseExpressionStatement() *ExpressionStatement {
 	stmt := &ExpressionStatement{stmtNode: stmtNode{Line: p.current().Line}}

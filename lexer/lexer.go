@@ -64,13 +64,12 @@ func (l *Lexer) skipComment() {
 		l.readChar()
 	}
 }
- 
 
 // readNumber reads a number (int or float)
 func (l *Lexer) readNumber() (string, TokenType) {
 	start := l.position
 	tokenType := INT
- 
+
 	// Read integer part
 	for unicode.IsDigit(rune(l.ch)) {
 		l.readChar()
@@ -83,7 +82,7 @@ func (l *Lexer) readNumber() (string, TokenType) {
 			l.readChar()
 		}
 	}
- 
+
 	return l.input[start:l.position], tokenType
 
 }
@@ -101,7 +100,7 @@ func (l *Lexer) readIdentifier() string {
 func (l *Lexer) readString(quote byte) string {
 	l.readChar() // skip the opening quote character
 	start := l.position
- 
+
 	result := []byte{}
 	for l.ch != quote && l.ch != 0 {
 		// Handle escape sequences
@@ -141,57 +140,62 @@ func (l *Lexer) nextToken() Token {
 	var tok Token
 
 	switch l.ch {
- 
 
 	case '#':
 		l.skipComment()
 		return l.nextToken() // skip comment, get next token
- 
+
 	// Arithmetic
 	case '+':
-		if l.peekChar() == '=' {
+		if l.peekChar() == '+' {
+			l.readChar()
+			tok = Token{INCREMENT, "++", line, col}
+		} else if l.peekChar() == '=' {
 			l.readChar()
 			tok = Token{PLUS_ASSIGN, "+=", line, col}
 		} else {
 			tok = Token{PLUS, "+", line, col}
 		}
 		l.readChar()
- 
+
 	case '-':
-		if l.peekChar() == '=' {
+		if l.peekChar() == '-' {
+			l.readChar()
+			tok = Token{DECREMENT, "--", line, col}
+		} else if l.peekChar() == '=' {
 			l.readChar()
 			tok = Token{MINUS_ASSIGN, "-=", line, col}
 		} else {
 			tok = Token{MINUS, "-", line, col}
 		}
 		l.readChar()
- 
+
 	case '*':
 		if l.peekChar() == '*' {
 			l.readChar()
 			tok = Token{POWER, "**", line, col}
 		} else if l.peekChar() == '=' {
-        	l.readChar()
-        	tok = Token{ASTERISK_ASSIGN, "*=", line, col}
+			l.readChar()
+			tok = Token{ASTERISK_ASSIGN, "*=", line, col}
 		} else {
 			tok = Token{ASTERISK, "*", line, col}
 		}
 		l.readChar()
- 
+
 	case '/':
 		if l.peekChar() == '=' {
-        	l.readChar()
-        	tok = Token{SLASH_ASSIGN, "/=", line, col}
-    	} else {
-        	tok = Token{SLASH, "/", line, col}
-    	}
-    	l.readChar()
- 
+			l.readChar()
+			tok = Token{SLASH_ASSIGN, "/=", line, col}
+		} else {
+			tok = Token{SLASH, "/", line, col}
+		}
+		l.readChar()
+
 	case '%':
 		tok = Token{PERCENT, "%", line, col}
 		l.readChar()
- 
-	// Assignment & Comparison 
+
+	// Assignment & Comparison
 	case '=':
 		if l.peekChar() == '=' {
 			l.readChar()
@@ -203,7 +207,7 @@ func (l *Lexer) nextToken() Token {
 			tok = Token{ASSIGN, "=", line, col}
 		}
 		l.readChar()
- 
+
 	case '!':
 		if l.peekChar() == '=' {
 			l.readChar()
@@ -212,7 +216,7 @@ func (l *Lexer) nextToken() Token {
 			tok = Token{NOT, "!", line, col}
 		}
 		l.readChar()
- 
+
 	case '<':
 		if l.peekChar() == '=' {
 			l.readChar()
@@ -221,7 +225,7 @@ func (l *Lexer) nextToken() Token {
 			tok = Token{LT, "<", line, col}
 		}
 		l.readChar()
- 
+
 	case '>':
 		if l.peekChar() == '=' {
 			l.readChar()
@@ -230,7 +234,7 @@ func (l *Lexer) nextToken() Token {
 			tok = Token{GT, ">", line, col}
 		}
 		l.readChar()
- 
+
 	// Logical Symbols
 	case '&':
 		if l.peekChar() == '&' {
@@ -241,7 +245,7 @@ func (l *Lexer) nextToken() Token {
 			tok = Token{ILLEGAL, "&", line, col}
 			l.readChar()
 		}
- 
+
 	case '|':
 		if l.peekChar() == '|' {
 			l.readChar()
@@ -251,7 +255,7 @@ func (l *Lexer) nextToken() Token {
 			tok = Token{ILLEGAL, "|", line, col}
 			l.readChar()
 		}
- 
+
 	// Delimiters
 	case '(':
 		tok = Token{LPAREN, "(", line, col}
@@ -271,7 +275,7 @@ func (l *Lexer) nextToken() Token {
 	case ']':
 		tok = Token{RBRACKET, "]", line, col}
 		l.readChar()
- 
+
 	// Punctuation
 	case ';':
 		tok = Token{SEMICOLON, ";", line, col}
@@ -285,37 +289,37 @@ func (l *Lexer) nextToken() Token {
 	case ':':
 		tok = Token{COLON, ":", line, col}
 		l.readChar()
- 
-	// Newline 
+
+	// Newline
 	case '\n':
 		tok = Token{NEWLINE, "\\n", line, col}
 		l.readChar()
- 
-	// String Literals 
+
+	// String Literals
 	case '"':
 		value := l.readString('"')
 		tok = Token{STRING, value, line, col}
 	case '\'':
 		value := l.readString('\'')
 		tok = Token{STRING, value, line, col}
- 
-	// EOF 
+
+	// EOF
 	case 0:
 		tok = Token{EOF, "", line, col}
- 
+
 	// ── Identifiers, Keywords, Numbers ────────
 	default:
 		if unicode.IsLetter(rune(l.ch)) || l.ch == '_' {
-		
+
 			literal := l.readIdentifier()
 			tokType := LookupIdent(literal)
 			return Token{tokType, literal, line, col}
- 
+
 		} else if unicode.IsDigit(rune(l.ch)) {
-			
+
 			literal, tokType := l.readNumber()
 			return Token{tokType, literal, line, col}
- 
+
 		} else {
 
 			tok = Token{ILLEGAL, string(l.ch), line, col}

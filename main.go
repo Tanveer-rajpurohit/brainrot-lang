@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"brainrot-lang/lexer"
-	"brainrot-lang/utils"
 	"brainrot-lang/parser"
+	"brainrot-lang/utils"
 )
 
 func main() {
@@ -55,7 +55,7 @@ func runFile(filename string) {
 	fmt.Println()
 	fmt.Printf("%sSource Code:%s\n%s\n", utils.ColorCyan, utils.ColorReset, string(source))
 
-	// Step 1: Lexer 
+	// Step 1: Lexer
 	fmt.Printf("\n%s[LEXER OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
 	l := lexer.New(string(source))
 	tokens := l.Tokenize()
@@ -63,12 +63,11 @@ func runFile(filename string) {
 	// Print lexical table
 	utils.PrintLexicalTable(tokens)
 
-
 	// Step 2: Parser
 	p := parser.New(tokens)
-    program := p.Parse()
+	program := p.Parse()
 
 	//log the AST
 	fmt.Printf("\n%s[AST OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
-	fmt.Printf("%#v\n", program)
+	parser.PrintProgram(program)
 }

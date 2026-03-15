@@ -46,12 +46,14 @@ const (
 	CONTINUE TokenType = "skip_this_one"
 
 	// ── Arithmetic Operators ───────────────────
-	PLUS     TokenType = "+"
-	MINUS    TokenType = "-"
-	ASTERISK TokenType = "*"
-	SLASH    TokenType = "/"
-	PERCENT  TokenType = "%"
-	POWER    TokenType = "**"
+	PLUS      TokenType = "+"
+	MINUS     TokenType = "-"
+	ASTERISK  TokenType = "*"
+	SLASH     TokenType = "/"
+	PERCENT   TokenType = "%"
+	POWER     TokenType = "**"
+	INCREMENT TokenType = "++"
+	DECREMENT TokenType = "--"
 
 	// ── Comparison Operators ───────────────────
 	EQ     TokenType = "=="

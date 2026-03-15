@@ -49,11 +49,7 @@ func (p *Parser) expect(t lexer.TokenType) lexer.Token { // advance IF current m
 	if p.current().Type == t {
 		return p.advance()
 	}
-	// wrong token — record error but keep going to find more errors
-	p.errors = append(p.errors, fmt.Sprintf(
-		"[Skill Issue] \nexpected  '%s' but got '%s' at line %d",
-		t, p.current().Type, p.current().Line,
-	))
+	p.addError(fmt.Sprintf("expected '%s' but got '%s'", t, p.current().Type), p.current().Line)
 	return p.current()
 }
 
@@ -61,6 +57,14 @@ func (p *Parser) skipNewlines() { // skip NEWLINE tokens between statements
 	for p.current().Type == lexer.NEWLINE {
 		p.advance()
 	}
+}
+
+// addError records a structured [Skill Issue] error for the parser
+func (p *Parser) addError(msg string, line int) {
+	p.errors = append(p.errors, fmt.Sprintf(
+		"\n[Skill Issue]\nMeh kya ladle meow ghop ghop ghop \n [Parser Error]\n   Line %d, Col 0 → %s\n",
+		line, msg,
+	))
 }
 
 func (p *Parser) Parse() *Program {
@@ -103,11 +107,11 @@ func (p *Parser) parseStatement() Statement {
 		return p.parseContinueStatement()
 	case lexer.IDENT:
 		switch p.peek().Type {
-    case lexer.ASSIGN, lexer.PLUS_ASSIGN, lexer.MINUS_ASSIGN,
-         lexer.ASTERISK_ASSIGN, lexer.SLASH_ASSIGN:
-        return p.parseAssignStatement()
-    default:
-        return p.parseExpressionStatement() // handles i++ via expression
+    	case lexer.ASSIGN, lexer.PLUS_ASSIGN, lexer.MINUS_ASSIGN,
+         	lexer.ASTERISK_ASSIGN, lexer.SLASH_ASSIGN:
+        	return p.parseAssignStatement()
+    	default:
+        	return p.parseExpressionStatement() // handles i++ via expression
     }
 	default:
 		return p.parseExpressionStatement()
