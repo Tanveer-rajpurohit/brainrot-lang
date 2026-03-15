@@ -89,10 +89,6 @@ func (p *Parser) parseStatement() Statement {
 		return p.parsePrintStatement()
 	case lexer.IF:
 		return p.parseIfStatement()
-	case lexer.ELSE_IF:
-		return p.parseElseIfStatement()
-	case lexer.ELSE:
-		return p.parseElseStatement()
 	case lexer.WHILE:
 		return p.parseWhileStatement()
 	case lexer.FOR:

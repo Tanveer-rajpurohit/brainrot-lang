@@ -61,3 +61,8 @@ func (p *Parser) parseElseIfStatement() []*ElseIfClause {
 	}
 	return elseIfs
 }
+
+func (p *Parser) parseElseStatement() *BlockStatement {
+	p.expect(lexer.ELSE)
+	return p.parseBlockStatement()
+}
