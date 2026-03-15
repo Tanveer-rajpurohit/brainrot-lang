@@ -35,6 +35,12 @@ func (e *Environment) Set(name string, val interface{}) {
     e.store[name] = val
 }
 
+// ExistsLocal checks if a variable exists in THIS scope only (not parent)
+func (e *Environment) ExistsLocal(name string) bool {
+    _, ok := e.store[name]
+    return ok
+}
+
 func (e *Environment) Update(name string, val interface{}) bool {
     if _, ok := e.store[name]; ok {
         e.store[name] = val

@@ -16,6 +16,13 @@ func (i *Interpreter) evalStatement(node parser.Statement) interface{} {
 		return i.EvalExpr(n.Value)
 	
 	case *parser.VarStatement:
+		if i.env.ExistsLocal(n.Name) {
+			i.runtimeError(n.GetLine(), fmt.Sprintf(
+				"variable '%s' already declared in this scope — no cap, you can't declare it twice",
+				n.Name,
+			))
+			return nil
+		}
 		val := i.EvalExpr(n.Value)
 		i.env.Set(n.Name, val)
 		return nil
