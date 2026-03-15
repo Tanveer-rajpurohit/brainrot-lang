@@ -70,6 +70,8 @@ const (
 	ASSIGN       TokenType = "="
 	PLUS_ASSIGN  TokenType = "+="
 	MINUS_ASSIGN TokenType = "-="
+	ASTERISK_ASSIGN TokenType = "*="
+	SLASH_ASSIGN    TokenType = "/="
 
 	// ── Delimiters ─────────────────────────────
 	LPAREN   TokenType = "("

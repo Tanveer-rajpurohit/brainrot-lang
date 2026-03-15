@@ -102,10 +102,13 @@ func (p *Parser) parseStatement() Statement {
 	case lexer.CONTINUE:
 		return p.parseContinueStatement()
 	case lexer.IDENT:
-		if p.peek().Type == lexer.ASSIGN || p.peek().Type == lexer.PLUS_ASSIGN || p.peek().Type == lexer.MINUS_ASSIGN {
-			return p.parseAssignStatement()
-		}
-		return p.parseExpressionStatement()
+		switch p.peek().Type {
+    case lexer.ASSIGN, lexer.PLUS_ASSIGN, lexer.MINUS_ASSIGN,
+         lexer.ASTERISK_ASSIGN, lexer.SLASH_ASSIGN:
+        return p.parseAssignStatement()
+    default:
+        return p.parseExpressionStatement() // handles i++ via expression
+    }
 	default:
 		return p.parseExpressionStatement()
 	}

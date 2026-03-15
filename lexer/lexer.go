@@ -170,14 +170,22 @@ func (l *Lexer) nextToken() Token {
 		if l.peekChar() == '*' {
 			l.readChar()
 			tok = Token{POWER, "**", line, col}
+		} else if l.peekChar() == '=' {
+        	l.readChar()
+        	tok = Token{ASTERISK_ASSIGN, "*=", line, col}
 		} else {
 			tok = Token{ASTERISK, "*", line, col}
 		}
 		l.readChar()
  
 	case '/':
-		tok = Token{SLASH, "/", line, col}
-		l.readChar()
+		if l.peekChar() == '=' {
+        	l.readChar()
+        	tok = Token{SLASH_ASSIGN, "/=", line, col}
+    	} else {
+        	tok = Token{SLASH, "/", line, col}
+    	}
+    	l.readChar()
  
 	case '%':
 		tok = Token{PERCENT, "%", line, col}

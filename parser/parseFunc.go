@@ -10,10 +10,10 @@ func (p *Parser) parseVarStatement() *VarStatement {
 
 	p.expect(lexer.VAR)                    // consume "trust_me_bro"
 	nameToken := p.expect(lexer.IDENT)     // consume "x", grab the name
-	stmt.name = nameToken.Literal
+	stmt.Name = nameToken.Literal
 
 	p.expect(lexer.ASSIGN)                 // consume "="
-	stmt.value = p.parseExpression()       // parse whatever is on the right
+	stmt.Value = p.parseExpression()       // parse whatever is on the right
 
 	return stmt
 }
@@ -23,7 +23,9 @@ func (p *Parser) parsePrintStatement() *PrintStatement {
 	stmt := &PrintStatement{stmtNode: stmtNode{Line : p.current().Line}}
 
 	p.expect(lexer.PRINT)
+	p.expect(lexer.LPAREN)
 	stmt.Value = p.parseExpression()
+	p.expect(lexer.RPAREN)
 
 	return stmt
 }
@@ -99,8 +101,11 @@ func (p *Parser) parseForStatement() *ForStatement {
 		utils.Fatal(utils.NewError("Parser", p.current().Line, p.current().Column, "expected variable declaration or assignment in for loop init"))
 	}
 
+	p.expect(lexer.SEMICOLON) 
 	stmt.Condition = p.parseExpression() // i < 10
+	p.expect(lexer.SEMICOLON)  
 	stmt.Post = p.parseAssignStatement() // i += 1
+	
 	stmt.Body = p.parseBlockStatement()
 
 	return stmt
@@ -127,6 +132,8 @@ func (p *Parser) parseFuncStatement() *FuncStatement {
 		p.expect(lexer.RPAREN)
 	}
 
+	stmt.Body = p.parseBlockStatement()
+
 	return stmt
 }
 
@@ -134,7 +141,11 @@ func (p *Parser) parseFuncStatement() *FuncStatement {
 func (p *Parser) parseReturnStatement() *ReturnStatement {
 	stmt := &ReturnStatement{stmtNode: stmtNode{Line: p.current().Line}}
 	p.expect(lexer.RETURN)
-	stmt.Value = p.parseExpression()
+	if p.current().Type == lexer.NEWLINE || p.current().Type == lexer.RBRACE || p.current().Type == lexer.EOF {
+    	stmt.Value = nil  // bare return
+	} else {
+    	stmt.Value = p.parseExpression()
+	}
 
 	return stmt
 }
@@ -163,7 +174,7 @@ func (p *Parser) parseBlockStatement() *BlockStatement {
 
 	p.expect(lexer.LBRACE)
 	
-	for p.current().Type != lexer.RBRACE {
+	for p.current().Type != lexer.RBRACE && p.current().Type != lexer.EOF {
 		s := p.parseStatement()
 		if s != nil {
 			stmt.Statements = append(stmt.Statements, s)

@@ -34,8 +34,8 @@ type Program struct {
 // trust_me_bro x = 42
 type VarStatement struct {
 	stmtNode  // ← Line + statementNode() + GetLine()
-	name  string // x
-	value Expression // 42
+	Name  string // x
+	Value Expression // 42
 }
 
 // x = 42   x += 1   x -= 1   (re-assignment, not declaration)
