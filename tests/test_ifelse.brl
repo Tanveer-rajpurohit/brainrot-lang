@@ -1,0 +1,55 @@
+# Test: if / else if / else — full chain
+
+let_him_cook main() {
+    # Test 1: hits first branch
+    trust_me_bro score = 95
+    chat_is_this_real (score >= 90) {
+        say_my_name("A grade")
+    }
+    wait_hold_up (score >= 75) {
+        say_my_name("B grade")
+    }
+    nah_bro {
+        say_my_name("F grade")
+    }
+
+    # Test 2: hits middle branch
+    trust_me_bro score2 = 80
+    chat_is_this_real (score2 >= 90) {
+        say_my_name("A grade")
+    }
+    wait_hold_up (score2 >= 75) {
+        say_my_name("B grade")
+    }
+    nah_bro {
+        say_my_name("F grade")
+    }
+
+    # Test 3: hits else
+    trust_me_bro score3 = 40
+    chat_is_this_real (score3 >= 90) {
+        say_my_name("A grade")
+    }
+    wait_hold_up (score3 >= 75) {
+        say_my_name("B grade")
+    }
+    nah_bro {
+        say_my_name("F grade")
+    }
+
+    # Test 4: only if, no else
+    chat_is_this_real (fr_fr) {
+        say_my_name("always runs")
+    }
+
+    # Test 5: condition is false, no else — nothing should print
+    chat_is_this_real (cap) {
+        say_my_name("SHOULD NOT PRINT")
+    }
+}
+
+# Expected Output:
+# A grade
+# B grade
+# F grade
+# always runs

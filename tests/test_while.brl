@@ -1,0 +1,44 @@
+# Test: while loop (on_repeat)
+
+let_him_cook main() {
+    # Test 1: basic countdown
+    trust_me_bro i = 5
+    on_repeat (i > 0) {
+        say_my_name(i)
+        i -= 1
+    }
+
+    # Test 2: while with break
+    trust_me_bro j = 0
+    on_repeat (fr_fr) {
+        chat_is_this_real (j == 3) {
+            mission_abort
+        }
+        say_my_name("j=" + j)
+        j += 1
+    }
+
+    # Test 3: while with continue
+    trust_me_bro k = 0
+    on_repeat (k < 5) {
+        k += 1
+        chat_is_this_real (k == 3) {
+            skip_this_one
+        }
+        say_my_name("k=" + k)
+    }
+}
+
+# Expected Output:
+# 5
+# 4
+# 3
+# 2
+# 1
+# j=0
+# j=1
+# j=2
+# k=1
+# k=2
+# k=4
+# k=5

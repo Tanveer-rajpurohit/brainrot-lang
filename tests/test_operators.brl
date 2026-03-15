@@ -1,0 +1,67 @@
+# Test: All operators — comparison, logical, postfix, compound assign
+
+let_him_cook main() {
+    # Comparison operators
+    say_my_name(5 == 5)
+    say_my_name(5 != 3)
+    say_my_name(10 > 5)
+    say_my_name(3 < 7)
+    say_my_name(5 >= 5)
+    say_my_name(4 <= 4)
+    say_my_name(5 == 6)
+
+    # Logical operators
+    say_my_name(fr_fr && fr_fr)
+    say_my_name(fr_fr && cap)
+    say_my_name(cap || fr_fr)
+    say_my_name(cap || cap)
+    say_my_name(!fr_fr)
+    say_my_name(!cap)
+
+    # Compound assignment
+    trust_me_bro x = 10
+    x += 5
+    say_my_name(x)
+    x -= 3
+    say_my_name(x)
+    x *= 2
+    say_my_name(x)
+    x /= 4
+    say_my_name(x)
+
+    # Postfix ++ and --
+    trust_me_bro n = 0
+    n++
+    n++
+    n++
+    say_my_name(n)
+    n--
+    say_my_name(n)
+
+    # Power operator
+    say_my_name(2 ** 8)
+    say_my_name(3 ** 3)
+}
+
+# Expected Output:
+# fr fr
+# fr fr
+# fr fr
+# fr fr
+# fr fr
+# fr fr
+# cap
+# fr fr
+# cap
+# fr fr
+# cap
+# cap
+# fr fr
+# 15
+# 12
+# 24
+# 6
+# 3
+# 2
+# 256
+# 27

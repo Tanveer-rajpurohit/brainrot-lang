@@ -1,0 +1,8 @@
+# Test: ERROR CASE — no main() function
+# Expected: Runtime error "no main() found"
+
+trust_me_bro x = 10
+
+let_him_cook notMain() {
+    say_my_name(x)
+}

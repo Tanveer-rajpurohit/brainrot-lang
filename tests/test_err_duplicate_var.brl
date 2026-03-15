@@ -1,0 +1,9 @@
+# Test: ERROR CASE — duplicate global variable
+# Expected: Runtime error "global variable 'name' already declared at line X"
+
+trust_me_bro name = "Walter"
+trust_me_bro name = "Jesse"
+
+let_him_cook main() {
+    say_my_name(name)
+}

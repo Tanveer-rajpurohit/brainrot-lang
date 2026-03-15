@@ -1,0 +1,6 @@
+# Test: ERROR CASE — undefined variable
+# Expected: Runtime error "variable 'x' is ghosted (not defined)"
+
+let_him_cook main() {
+    say_my_name(x)
+}

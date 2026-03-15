@@ -1,0 +1,10 @@
+# Test: ERROR CASE — wrong number of arguments
+# Expected: Runtime error "function expects 2 args but got 1"
+
+let_him_cook add(a, b) {
+    take_this a + b
+}
+
+let_him_cook main() {
+    say_my_name(add(5))
+}

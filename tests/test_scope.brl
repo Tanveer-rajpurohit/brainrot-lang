@@ -1,0 +1,60 @@
+# Test: Scope — local vs global, function scope isolation
+
+trust_me_bro globalVar = "I am global"
+
+let_him_cook readGlobal() {
+    # function can READ global variable
+    say_my_name(globalVar)
+}
+
+let_him_cook shadowTest() {
+    # local var with same name as global — should shadow it
+    trust_me_bro globalVar = "I am local shadow"
+    say_my_name(globalVar)
+}
+
+let_him_cook scopeIsolation() {
+    trust_me_bro localOnly = "only inside this func"
+    say_my_name(localOnly)
+}
+
+let_him_cook counter() {
+    trust_me_bro count = 0
+    count += 1
+    count += 1
+    count += 1
+    take_this count
+}
+
+let_him_cook main() {
+    # Test 1: read global
+    readGlobal()
+
+    # Test 2: global unchanged after shadow
+    shadowTest()
+    say_my_name(globalVar)
+
+    # Test 3: local scope isolation
+    scopeIsolation()
+
+    # Test 4: function scope resets each call
+    say_my_name(counter())
+    say_my_name(counter())
+
+    # Test 5: for loop has its own scope
+    run_it_back (trust_me_bro i = 0; i < 3; i += 1) {
+        trust_me_bro inner = i * 2
+        say_my_name(inner)
+    }
+}
+
+# Expected Output:
+# I am global
+# I am local shadow
+# I am global
+# only inside this func
+# 3
+# 3
+# 0
+# 2
+# 4

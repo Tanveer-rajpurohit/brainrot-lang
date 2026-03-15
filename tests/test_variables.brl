@@ -1,0 +1,25 @@
+# Test: Variable declaration and printing all types
+
+let_him_cook main() {
+    trust_me_bro name = "Walter White"
+    trust_me_bro age = 52
+    trust_me_bro height = 5.11
+    trust_me_bro alive = fr_fr
+    trust_me_bro dead = cap
+    trust_me_bro nothing = ghosted
+
+    say_my_name(name)
+    say_my_name(age)
+    say_my_name(height)
+    say_my_name(alive)
+    say_my_name(dead)
+    say_my_name(nothing)
+}
+
+# Expected Output:
+# Walter White
+# 52
+# 5.11
+# fr fr
+# cap
+# ghosted

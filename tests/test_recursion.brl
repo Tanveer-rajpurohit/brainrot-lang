@@ -1,0 +1,48 @@
+# Test: Recursion
+
+let_him_cook factorial(n) {
+    chat_is_this_real (n <= 1) {
+        take_this 1
+    }
+    take_this n * factorial(n - 1)
+}
+
+let_him_cook fib(n) {
+    chat_is_this_real (n <= 1) {
+        take_this n
+    }
+    take_this fib(n - 1) + fib(n - 2)
+}
+
+let_him_cook sumTo(n) {
+    chat_is_this_real (n <= 0) {
+        take_this 0
+    }
+    take_this n + sumTo(n - 1)
+}
+
+let_him_cook main() {
+    # Test 1: factorial
+    say_my_name(factorial(1))
+    say_my_name(factorial(5))
+    say_my_name(factorial(10))
+
+    # Test 2: fibonacci
+    say_my_name(fib(0))
+    say_my_name(fib(1))
+    say_my_name(fib(7))
+    say_my_name(fib(10))
+
+    # Test 3: sum 1 to N
+    say_my_name(sumTo(10))
+}
+
+# Expected Output:
+# 1
+# 120
+# 3628800
+# 0
+# 1
+# 13
+# 55
+# 55

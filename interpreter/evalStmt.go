@@ -218,7 +218,12 @@ func (i *Interpreter) evalIf(node *parser.IfStatement) interface{} {
 
 func (i *Interpreter) evalWhile(node *parser.WhileStatement) interface{} {
 	for isTruthy(i.EvalExpr(node.Condition)) {
+		iterEnv := NewEnclosedEnvironment(i.env)
+		oldIterEnv := i.env
+		i.env = iterEnv
 		result := i.evalBlock(node.Body)
+		i.env = oldIterEnv
+
 		switch result.(type) {
 		case *BreakSignal:
 			return nil
@@ -241,15 +246,18 @@ func (i *Interpreter) evalFor(node *parser.ForStatement) interface{} {
 	}
 
 	for isTruthy(i.EvalExpr(node.Condition)) {
+		iterEnv := NewEnclosedEnvironment(i.env)
+		oldIterEnv := i.env
+		i.env = iterEnv
 		result := i.evalBlock(node.Body)
+    	i.env = oldIterEnv
+		
 		switch result.(type) {
 		case *BreakSignal:
 			return nil
 		case *ReturnValue:
 			return result
-
 		}
-
 		if node.Post != nil {
 			i.evalStatement(node.Post)
 		}

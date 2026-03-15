@@ -1,0 +1,48 @@
+# Test: for loop (run_it_back)
+
+let_him_cook main() {
+    # Test 1: basic for loop 0 to 4
+    run_it_back (trust_me_bro i = 0; i < 5; i += 1) {
+        say_my_name(i)
+    }
+
+    # Test 2: count down using for
+    run_it_back (trust_me_bro i = 10; i > 0; i -= 2) {
+        say_my_name(i)
+    }
+
+    # Test 3: for with break
+    run_it_back (trust_me_bro i = 0; i < 10; i += 1) {
+        chat_is_this_real (i == 4) {
+            mission_abort
+        }
+        say_my_name("loop " + i)
+    }
+
+    # Test 4: for with continue — skip even numbers
+    run_it_back (trust_me_bro i = 0; i < 6; i += 1) {
+        chat_is_this_real (i % 2 == 0) {
+            skip_this_one
+        }
+        say_my_name("odd: " + i)
+    }
+}
+
+# Expected Output:
+# 0
+# 1
+# 2
+# 3
+# 4
+# 10
+# 8
+# 6
+# 4
+# 2
+# loop 0
+# loop 1
+# loop 2
+# loop 3
+# odd: 1
+# odd: 3
+# odd: 5

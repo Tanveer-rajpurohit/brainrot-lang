@@ -1,0 +1,55 @@
+# Test: Functions — define, call, return, params
+
+let_him_cook greet(name) {
+    say_my_name("hello " + name)
+}
+
+let_him_cook add(a, b) {
+    take_this a + b
+}
+
+let_him_cook multiply(a, b) {
+    take_this a * b
+}
+
+let_him_cook max(a, b) {
+    chat_is_this_real (a > b) {
+        take_this a
+    }
+    take_this b
+}
+
+let_him_cook isEven(n) {
+    take_this n % 2 == 0
+}
+
+let_him_cook main() {
+    # Test 1: void function (no return)
+    greet("Walter")
+    greet("Jesse")
+
+    # Test 2: function with return value
+    trust_me_bro result = add(3, 7)
+    say_my_name(result)
+
+    # Test 3: nested calls
+    say_my_name(multiply(add(2, 3), 4))
+
+    # Test 4: conditional return
+    say_my_name(max(10, 20))
+    say_my_name(max(99, 5))
+
+    # Test 5: bool return
+    say_my_name(isEven(4))
+    say_my_name(isEven(7))
+}
+
+# Expected Output:
+# hello Walter
+# hello Jesse
+# 10
+# 20
+# 20
+# 99
+# fr fr
+# cap

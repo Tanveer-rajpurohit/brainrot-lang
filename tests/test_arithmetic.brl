@@ -1,0 +1,36 @@
+# Test: All arithmetic operators
+
+let_him_cook main() {
+    trust_me_bro a = 10
+    trust_me_bro b = 3
+
+    say_my_name(a + b)
+    say_my_name(a - b)
+    say_my_name(a * b)
+    say_my_name(a / b)
+    say_my_name(a % b)
+    say_my_name(a ** b)
+
+    # float math
+    trust_me_bro x = 10.0
+    trust_me_bro y = 3.0
+    say_my_name(x / y)
+
+    # string concat
+    trust_me_bro greeting = "hello " + "world"
+    say_my_name(greeting)
+
+    # string + number concat
+    say_my_name("age: " + a)
+}
+
+# Expected Output:
+# 13
+# 7
+# 30
+# 3
+# 1
+# 1000
+# 3.333333333333333  (or similar float)
+# hello world
+# age: 10

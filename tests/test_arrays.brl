@@ -1,0 +1,44 @@
+# Test: Arrays and index access
+
+let_him_cook main() {
+    # Test 1: declare and access array
+    trust_me_bro nums = [10, 20, 30, 40, 50]
+    say_my_name(nums[0])
+    say_my_name(nums[4])
+
+    # Test 2: array of strings
+    trust_me_bro names = ["Walter", "Jesse", "Saul"]
+    say_my_name(names[0])
+    say_my_name(names[2])
+
+    # Test 3: array of mixed types
+    trust_me_bro mixed = [1, "two", fr_fr, ghosted]
+    say_my_name(mixed[0])
+    say_my_name(mixed[1])
+    say_my_name(mixed[2])
+    say_my_name(mixed[3])
+
+    # Test 4: array index via variable
+    trust_me_bro idx = 1
+    say_my_name(nums[idx])
+
+    # Test 5: iterate array with for loop
+    trust_me_bro arr = [100, 200, 300]
+    run_it_back (trust_me_bro i = 0; i < 3; i += 1) {
+        say_my_name(arr[i])
+    }
+}
+
+# Expected Output:
+# 10
+# 50
+# Walter
+# Saul
+# 1
+# two
+# fr fr
+# ghosted
+# 20
+# 100
+# 200
+# 300

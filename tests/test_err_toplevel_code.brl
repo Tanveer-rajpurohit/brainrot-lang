@@ -1,0 +1,9 @@
+# Test: ERROR CASE — executable code at top level (not inside a function)
+# Expected: Runtime error "not allowed outside main()"
+
+trust_me_bro x = 10
+say_my_name(x)
+
+let_him_cook main() {
+    say_my_name("main runs")
+}
