@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"fmt"
-
 	"brainrot-lang/lexer"
 )
 
@@ -68,52 +66,3 @@ func GetTokenCategory(tokType lexer.TokenType) string {
 	return "UNKNOWN"
 }
 
-// PrintLexicalTable prints a formatted lexical token table
-func PrintLexicalTable(tokens []lexer.Token) {
-	// Print header
-	fmt.Printf("\n%s┌─────┬──────────────┬──────────────┬─────────────────┬────────┐%s\n", ColorBlue, ColorReset)
-	fmt.Printf("%s│ IDX │ TOKEN TYPE   │ LITERAL      │ CATEGORY        │ POS    │%s\n", ColorBlue, ColorReset)
-	fmt.Printf("%s├─────┼──────────────┼──────────────┼─────────────────┼────────┤%s\n", ColorBlue, ColorReset)
-
-	// Print each token row
-	for i, tok := range tokens {
-		if tok.Type == lexer.NEWLINE {
-			continue // skip newlines
-		}
-
-		// Get token category
-		category := GetTokenCategory(tok.Type)
-
-		// Format index
-		idx := fmt.Sprintf("[%d]", i)
-
-		// Format token type
-		tokType := fmt.Sprintf("%s", tok.Type)
-
-		// Format literal (truncate if too long)
-		literal := tok.Literal
-		if len(literal) > 12 {
-			literal = literal[:9] + "..."
-		}
-		if tok.Type == lexer.EOF {
-			literal = "EOF"
-		}
-
-		// Format position
-		pos := fmt.Sprintf("L%d:C%d", tok.Line, tok.Column)
-
-		// Print row with colors
-		fmt.Printf("%s│ %-3s │ %s%-12s%s │ %s%-12s%s │ %s%-15s%s │ %-6s │%s\n",
-			ColorBlue,
-			idx,
-			ColorCyan, tokType, ColorReset,
-			ColorGreen, literal, ColorReset,
-			ColorYellow, category, ColorReset,
-			pos,
-			ColorBlue)
-	}
-
-	// Print footer
-	fmt.Printf("%s└─────┴──────────────┴──────────────┴─────────────────┴────────┘%s\n", ColorBlue, ColorReset)
-	fmt.Printf("\n%sTotal Tokens: %d%s\n\n", ColorBold, len(tokens), ColorReset)
-}

@@ -69,5 +69,5 @@ func runFile(filename string) {
 
 	//log the AST
 	fmt.Printf("\n%s[AST OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
-	parser.PrintProgram(program)
+	utils.PrintProgram(program)
 }

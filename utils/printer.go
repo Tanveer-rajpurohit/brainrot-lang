@@ -1,12 +1,15 @@
-package parser
+package utils
 
 import (
 	"fmt"
 	"strings"
+
+	"brainrot-lang/parser"
+	"brainrot-lang/lexer"
 )
 
 // PrintProgram prints the full AST to the terminal in a readable tree format
-func PrintProgram(program *Program) {
+func PrintProgram(program *parser.Program) {
 	fmt.Println("Program")
 	for i, stmt := range program.Statements {
 		isLast := i == len(program.Statements)-1
@@ -21,42 +24,42 @@ func branch(isLast bool) (connector, childPrefix string) {
 	return "├── ", "│   "
 }
 
-func printStatement(stmt Statement, prefix string, isLast bool) {
+func printStatement(stmt parser.Statement, prefix string, isLast bool) {
 	connector, childPrefix := branch(isLast)
 
 	switch s := stmt.(type) {
-	case *VarStatement:
+	case *parser.VarStatement:
 		fmt.Printf("%s%sVarStatement (line %d)\n", prefix, connector, s.Line)
 		fmt.Printf("%s%s├── Name: %s\n", prefix, childPrefix, s.Name)
 		printExprLabel(s.Value, prefix+childPrefix, "Value", true)
 
-	case *AssignStatement:
+	case *parser.AssignStatement:
 		fmt.Printf("%s%sAssignStatement (line %d)\n", prefix, connector, s.Line)
 		fmt.Printf("%s%s├── Name: %s\n", prefix, childPrefix, s.Name)
 		fmt.Printf("%s%s├── Op:   %s\n", prefix, childPrefix, s.Operator)
 		printExprLabel(s.Value, prefix+childPrefix, "Value", true)
 
-	case *PrintStatement:
+	case *parser.PrintStatement:
 		fmt.Printf("%s%sPrintStatement (line %d)\n", prefix, connector, s.Line)
 		printExprLabel(s.Value, prefix+childPrefix, "Value", true)
 
-	case *ReturnStatement:
+	case *parser.ReturnStatement:
 		fmt.Printf("%s%sReturnStatement (line %d)\n", prefix, connector, s.Line)
 		if s.Value != nil {
 			printExprLabel(s.Value, prefix+childPrefix, "Value", true)
 		}
 
-	case *BreakStatement:
+	case *parser.BreakStatement:
 		fmt.Printf("%s%sBreakStatement (line %d)\n", prefix, connector, s.Line)
 
-	case *ContinueStatement:
+	case *parser.ContinueStatement:
 		fmt.Printf("%s%sContinueStatement (line %d)\n", prefix, connector, s.Line)
 
-	case *ExpressionStatement:
+	case *parser.ExpressionStatement:
 		fmt.Printf("%s%sExpressionStatement (line %d)\n", prefix, connector, s.Line)
 		printExprLabel(s.Value, prefix+childPrefix, "Expr", true)
 
-	case *IfStatement:
+	case *parser.IfStatement:
 		fmt.Printf("%s%sIfStatement (line %d)\n", prefix, connector, s.Line)
 		printExprLabel(s.Condition, prefix+childPrefix, "Condition", false)
 		printBlockLabel(s.Consequence, prefix+childPrefix, "Then", len(s.ElseIf) == 0 && s.Alternative == nil)
@@ -68,12 +71,12 @@ func printStatement(stmt Statement, prefix string, isLast bool) {
 			printBlockLabel(s.Alternative, prefix+childPrefix, "Else", true)
 		}
 
-	case *WhileStatement:
+	case *parser.WhileStatement:
 		fmt.Printf("%s%sWhileStatement (line %d)\n", prefix, connector, s.Line)
 		printExprLabel(s.Condition, prefix+childPrefix, "Condition", false)
 		printBlockLabel(s.Body, prefix+childPrefix, "Body", true)
 
-	case *ForStatement:
+	case *parser.ForStatement:
 		fmt.Printf("%s%sForStatement (line %d)\n", prefix, connector, s.Line)
 		if s.Init != nil {
 			printStatement(s.Init, prefix+childPrefix, false)
@@ -84,11 +87,11 @@ func printStatement(stmt Statement, prefix string, isLast bool) {
 		}
 		printBlockLabel(s.Body, prefix+childPrefix, "Body", true)
 
-	case *FuncStatement:
+	case *parser.FuncStatement:
 		fmt.Printf("%s%sFuncStatement (line %d)  %s(%s)\n", prefix, connector, s.Line, s.Name, strings.Join(s.Params, ", "))
 		printBlockLabel(s.Body, prefix+childPrefix, "Body", true)
 
-	case *BlockStatement:
+	case *parser.BlockStatement:
 		fmt.Printf("%s%sBlock (line %d)\n", prefix, connector, s.Line)
 		for i, inner := range s.Statements {
 			printStatement(inner, prefix+childPrefix, i == len(s.Statements)-1)
@@ -99,14 +102,14 @@ func printStatement(stmt Statement, prefix string, isLast bool) {
 	}
 }
 
-func printElseIf(ei *ElseIfClause, prefix string, isLast bool) {
+func printElseIf(ei *parser.ElseIfClause, prefix string, isLast bool) {
 	connector, childPrefix := branch(isLast)
 	fmt.Printf("%s%sElseIf (line %d)\n", prefix, connector, ei.Line)
 	printExprLabel(ei.Condition, prefix+childPrefix, "Condition", false)
 	printBlockLabel(ei.Body, prefix+childPrefix, "Body", true)
 }
 
-func printBlockLabel(block *BlockStatement, prefix, label string, isLast bool) {
+func printBlockLabel(block *parser.BlockStatement, prefix, label string, isLast bool) {
 	if block == nil {
 		return
 	}
@@ -117,49 +120,104 @@ func printBlockLabel(block *BlockStatement, prefix, label string, isLast bool) {
 	}
 }
 
-func printExprLabel(expr Expression, prefix, label string, isLast bool) {
+func printExprLabel(expr parser.Expression, prefix, label string, isLast bool) {
 	connector, childPrefix := branch(isLast)
 	fmt.Printf("%s%s%s: %s\n", prefix, connector, label, exprString(expr, prefix+childPrefix))
 }
 
-func exprString(expr Expression, _ string) string {
+func exprString(expr parser.Expression, _ string) string {
 	if expr == nil {
 		return "<nil>"
 	}
 	switch e := expr.(type) {
-	case *IntegerLiteral:
+	case *parser.IntegerLiteral:
 		return fmt.Sprintf("Int(%d)", e.Value)
-	case *FloatLiteral:
+	case *parser.FloatLiteral:
 		return fmt.Sprintf("Float(%g)", e.Value)
-	case *StringLiteral:
+	case *parser.StringLiteral:
 		return fmt.Sprintf("String(%q)", e.Value)
-	case *BoolLiteral:
+	case *parser.BoolLiteral:
 		return fmt.Sprintf("Bool(%v)", e.Value)
-	case *NilLiteral:
+	case *parser.NilLiteral:
 		return "Nil"
-	case *Identifier:
+	case *parser.Identifier:
 		return fmt.Sprintf("Ident(%s)", e.Name)
-	case *InfixExpression:
+	case *parser.InfixExpression:
 		return fmt.Sprintf("(%s %s %s)", exprString(e.Left, ""), e.Operator, exprString(e.Right, ""))
-	case *PrefixExpression:
+	case *parser.PrefixExpression:
 		return fmt.Sprintf("(%s%s)", e.Operator, exprString(e.Right, ""))
-	case *PostfixExpression:
+	case *parser.PostfixExpression:
 		return fmt.Sprintf("(%s%s)", exprString(e.Left, ""), e.Operator)
-	case *CallExpression:
+	case *parser.CallExpression:
 		args := make([]string, len(e.Arguments))
 		for i, a := range e.Arguments {
 			args[i] = exprString(a, "")
 		}
 		return fmt.Sprintf("Call(%s, [%s])", exprString(e.Function, ""), strings.Join(args, ", "))
-	case *ArrayLiteral:
+	case *parser.ArrayLiteral:
 		elems := make([]string, len(e.Elements))
 		for i, el := range e.Elements {
 			elems[i] = exprString(el, "")
 		}
 		return fmt.Sprintf("Array[%s]", strings.Join(elems, ", "))
-	case *IndexExpression:
+	case *parser.IndexExpression:
 		return fmt.Sprintf("%s[%s]", exprString(e.Left, ""), exprString(e.Index, ""))
 	default:
 		return "<expr>"
 	}
+}
+
+
+
+
+
+
+// PrintLexicalTable prints a formatted lexical token table
+func PrintLexicalTable(tokens []lexer.Token) {
+	// Print header
+	fmt.Printf("\n%s┌─────┬──────────────┬──────────────┬─────────────────┬────────┐%s\n", ColorBlue, ColorReset)
+	fmt.Printf("%s│ IDX │ TOKEN TYPE   │ LITERAL      │ CATEGORY        │ POS    │%s\n", ColorBlue, ColorReset)
+	fmt.Printf("%s├─────┼──────────────┼──────────────┼─────────────────┼────────┤%s\n", ColorBlue, ColorReset)
+
+	// Print each token row
+	for i, tok := range tokens {
+		if tok.Type == lexer.NEWLINE {
+			continue // skip newlines
+		}
+
+		// Get token category
+		category := GetTokenCategory(tok.Type)
+
+		// Format index
+		idx := fmt.Sprintf("[%d]", i)
+
+		// Format token type
+		tokType := fmt.Sprintf("%s", tok.Type)
+
+		// Format literal (truncate if too long)
+		literal := tok.Literal
+		if len(literal) > 12 {
+			literal = literal[:9] + "..."
+		}
+		if tok.Type == lexer.EOF {
+			literal = "EOF"
+		}
+
+		// Format position
+		pos := fmt.Sprintf("L%d:C%d", tok.Line, tok.Column)
+
+		// Print row with colors
+		fmt.Printf("%s│ %-3s │ %s%-12s%s │ %s%-12s%s │ %s%-15s%s │ %-6s │%s\n",
+			ColorBlue,
+			idx,
+			ColorCyan, tokType, ColorReset,
+			ColorGreen, literal, ColorReset,
+			ColorYellow, category, ColorReset,
+			pos,
+			ColorBlue)
+	}
+
+	// Print footer
+	fmt.Printf("%s└─────┴──────────────┴──────────────┴─────────────────┴────────┘%s\n", ColorBlue, ColorReset)
+	fmt.Printf("\n%sTotal Tokens: %d%s\n\n", ColorBold, len(tokens), ColorReset)
 }
