@@ -18,7 +18,7 @@ func (i *Interpreter) evalStatement(node parser.Statement) interface{} {
 	case *parser.VarStatement:
 		if i.env.ExistsLocal(n.Name) {
 			i.runtimeError(n.GetLine(), fmt.Sprintf(
-				"variable '%s' already declared in this scope — no cap, you can't declare it twice",
+				"variable '%s' already declared in this scope — you can't declare it twice",
 				n.Name,
 			))
 			return nil
@@ -106,7 +106,7 @@ func (i *Interpreter) evalProgram(program *parser.Program) interface{} {
 		case *parser.VarStatement:
 			if prevLine, exists := seenVars[s.Name]; exists {
 				i.runtimeError(s.GetLine(), fmt.Sprintf(
-					"global variable '%s' already declared at line %d — no cap, you can't declare it twice",
+					"global variable '%s' already declared at line %d — you can't declare it twice",
 					s.Name, prevLine,
 				))
 			} else {
