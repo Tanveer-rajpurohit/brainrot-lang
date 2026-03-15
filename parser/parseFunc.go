@@ -37,9 +37,13 @@ func (p *Parser) parseIfStatement() *IfStatement {
 	stmt.Condition = p.parseExpression()
 	stmt.Consequence = p.parseBlockStatement()
 
+	p.skipNewlines()
+
 	if p.current().Type == lexer.ELSE_IF {
 		stmt.ElseIf = p.parseElseIfStatement()
 	}
+
+	p.skipNewlines()
 
 	if p.current().Type == lexer.ELSE {
 		stmt.Alternative = p.parseElseStatement()
@@ -60,6 +64,7 @@ func (p *Parser) parseElseIfStatement() []*ElseIfClause {
 		elseIf.Body = p.parseBlockStatement()
 
 		elseIfs = append(elseIfs, elseIf)
+		p.skipNewlines()
 
 	}
 	return elseIfs
