@@ -89,22 +89,46 @@ func (i *Interpreter) evalStatement(node parser.Statement) interface{} {
 
 // It first registers all functions, then either calls main() or runs top-level stmts
 func (i *Interpreter) evalProgram(program *parser.Program) interface{} {
+	// Pass 1: validate — only VarStatement and FuncStatement allowed at top level
 	for _, stmt := range program.Statements {
-		if fn, ok := stmt.(*parser.FuncStatement); ok {
-			i.evalStatement(fn)
+		switch stmt.(type) {
+		case *parser.VarStatement:
+		case *parser.FuncStatement:
+		default:
+			i.runtimeError(stmt.GetLine(), fmt.Sprintf(
+				"not allowed outside main() — only 'trust_me_bro' variables and 'let_him_cook' functions are allowed at top level",
+			))
 		}
 	}
 
-	mainFn, ok := i.env.Get("main")
+	if len(i.errors) > 0 {
+		return nil
+	}
 
-	if !ok {
-
-		for _, stmt := range program.Statements {
-			result := i.evalStatement(stmt)
-			if ret, ok := result.(*ReturnValue); ok {
-				return ret.Value
-			}
+	// Pass 2: run global variables top-to-bottom
+	for _, stmt := range program.Statements {
+		if varStmt, ok := stmt.(*parser.VarStatement); ok {
+			val := i.EvalExpr(varStmt.Value)
+			i.env.Set(varStmt.Name, val)
 		}
+	}
+
+	// Pass 3: register all functions (bodies not executed yet)
+	for _, stmt := range program.Statements {
+		if fnStmt, ok := stmt.(*parser.FuncStatement); ok {
+			fn := &FuncValue{
+				Params: fnStmt.Params,
+				Body:   fnStmt.Body,
+				Env:    i.env,
+			}
+			i.env.Set(fnStmt.Name, fn)
+		}
+	}
+
+	// Pass 4: call main()
+	mainFn, ok := i.env.Get("main")
+	if !ok {
+		i.runtimeError(0, "no main() found — BrainRot Lang needs 'let_him_cook main() { ... }'")
 		return nil
 	}
 
@@ -113,9 +137,10 @@ func (i *Interpreter) evalProgram(program *parser.Program) interface{} {
 		i.runtimeError(0, "main is not a function")
 		return nil
 	}
-	funcEnv := NewEnclosedEnvironment(fn.Env)
+
+	mainEnv := NewEnclosedEnvironment(fn.Env)
 	oldEnv := i.env
-	i.env = funcEnv
+	i.env = mainEnv
 	result := i.evalBlock(fn.Body)
 	i.env = oldEnv
 
