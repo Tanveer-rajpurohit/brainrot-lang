@@ -1,8 +1,9 @@
 package parser
 
 import (
+	"fmt"
+
 	"brainrot-lang/lexer"
-	"brainrot-lang/utils"
 )
 
 func (p *Parser) parseVarStatement() *VarStatement {
@@ -98,7 +99,10 @@ func (p *Parser) parseForStatement() *ForStatement {
 	} else if p.current().Type == lexer.IDENT {
 		stmt.Init = p.parseAssignStatement() // i = 0
 	} else {
-		utils.Fatal(utils.NewError("Parser", p.current().Line, p.current().Column, "expected variable declaration or assignment in for loop init"))
+		p.errors = append(p.errors, fmt.Sprintf(
+            "[Skill Issue] \nexpected variable declaration or assignment but got '%s' at line %d",
+			p.current().Literal, p.current().Line,
+		))
 	}
 
 	p.expect(lexer.SEMICOLON) 
@@ -181,8 +185,41 @@ func (p *Parser) parseBlockStatement() *BlockStatement {
 		}
 		p.skipNewlines()
 	}
-	
+
 	p.expect(lexer.RBRACE)
-	
+
+	return stmt
+}
+
+
+func (p *Parser) parseAssignStatement() *AssignStatement {
+	stmt := &AssignStatement{stmtNode: stmtNode{Line: p.current().Line}}
+
+	stmt.Name =  p.expect(lexer.IDENT).Literal
+
+	switch p.current().Type {
+    case lexer.ASSIGN, lexer.PLUS_ASSIGN, lexer.MINUS_ASSIGN,
+         lexer.ASTERISK_ASSIGN, lexer.SLASH_ASSIGN:
+        stmt.Operator = p.current().Literal
+        p.advance()
+		
+    default:
+        p.errors = append(p.errors, fmt.Sprintf(
+            "[Skill Issue] \nexpected assignment operator but got '%s' at line %d",
+            p.current().Literal, p.current().Line,
+        ))
+    }
+
+	stmt.Value = p.parseExpression()
+
+	return stmt
+}
+
+
+func (p *Parser) parseExpressionStatement() *ExpressionStatement {
+	stmt := &ExpressionStatement{stmtNode: stmtNode{Line: p.current().Line}}
+
+	stmt.Value = p.parseExpression()
+
 	return stmt
 }
