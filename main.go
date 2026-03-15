@@ -97,7 +97,7 @@ func runFile(filename string, showTokens bool, showAST bool) {
 	interp.Eval(program)
  
 	if errs := interp.Errors(); len(errs) > 0 {
-		fmt.Printf("\n%s[RUNTIME ERRORS]%s\n", utils.ColorRed, utils.ColorReset)
+		fmt.Printf("\n%s%s\n", utils.ColorRed, utils.ColorReset)
 		for _, e := range errs {
 			fmt.Printf("%s%s%s\n", utils.ColorRed, e, utils.ColorReset)
 		}

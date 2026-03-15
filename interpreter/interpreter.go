@@ -46,12 +46,11 @@ func (i *Interpreter) Errors() []string {
 }
 
 func (i *Interpreter) runtimeError(line int, msg string) {
-	i.errors = append(i.errors, fmt.Sprintf(
-		"\n[SKILL ISSUE]\n   [Runtime Error]\n  Line %d → %s\n",
-		line, msg,
-	))
+    i.errors = append(i.errors, fmt.Sprintf(
+        "\n[SKILL ISSUE]\n  [Runtime Error]\n  Line %d → %s\n",
+        line, msg,
+    ))
 }
-
 
 func (i *Interpreter) Eval(program *parser.Program) interface{} {
 	return i.evalProgram(program)
