@@ -89,15 +89,37 @@ func (i *Interpreter) evalStatement(node parser.Statement) interface{} {
 
 // It first registers all functions, then either calls main() or runs top-level stmts
 func (i *Interpreter) evalProgram(program *parser.Program) interface{} {
-	// Pass 1: validate — only VarStatement and FuncStatement allowed at top level
+	// Pass 1: validate + detect duplicates
+	seenVars  := make(map[string]int) // varName  → line it was declared
+	seenFuncs := make(map[string]int) // funcName → line it was defined
+
 	for _, stmt := range program.Statements {
-		switch stmt.(type) {
+		switch s := stmt.(type) {
+
 		case *parser.VarStatement:
+			if prevLine, exists := seenVars[s.Name]; exists {
+				i.runtimeError(s.GetLine(), fmt.Sprintf(
+					"global variable '%s' already declared at line %d — no cap, you can't declare it twice",
+					s.Name, prevLine,
+				))
+			} else {
+				seenVars[s.Name] = s.GetLine()
+			}
+
 		case *parser.FuncStatement:
+			if prevLine, exists := seenFuncs[s.Name]; exists {
+				i.runtimeError(s.GetLine(), fmt.Sprintf(
+					"function '%s' already defined at line %d — let him cook only once bro",
+					s.Name, prevLine,
+				))
+			} else {
+				seenFuncs[s.Name] = s.GetLine()
+			}
+
 		default:
-			i.runtimeError(stmt.GetLine(), fmt.Sprintf(
+			i.runtimeError(stmt.GetLine(),
 				"not allowed outside main() — only 'trust_me_bro' variables and 'let_him_cook' functions are allowed at top level",
-			))
+			)
 		}
 	}
 
@@ -147,8 +169,8 @@ func (i *Interpreter) evalProgram(program *parser.Program) interface{} {
 	if ret, ok := result.(*ReturnValue); ok {
 		return ret.Value
 	}
-	return result
 
+	return result
 }
 
 
