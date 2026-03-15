@@ -8,10 +8,13 @@ import (
 )
 
 
-type ReturnValue struct{ Value interface{} }  // take_this x
-type BreakSignal struct{}                      // mission_abort
-type ContinueSignal struct{}                   // skip_this_one
+type ReturnValue struct {
+	Value interface{}
+}
 
+type BreakSignal struct{}
+
+type ContinueSignal struct{}
 
 type FuncValue struct {
 	Params []string
