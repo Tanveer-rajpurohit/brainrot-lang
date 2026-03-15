@@ -162,18 +162,18 @@ Three categories of errors:
 
 ```bash
 # Run a program
-go run main.go run examples/fibonacci.brl
+go run main.go run examples/fibonacci.brt
 
 # Show token stream (demonstrates Lexer)
-go run main.go tokens examples/hello.brl
+go run main.go tokens examples/hello.brt
 
 # Show AST (demonstrates Parser)
-go run main.go ast examples/hello.brl
+go run main.go ast examples/hello.brt
 
 # Show all three in sequence for demo
-go run main.go tokens examples/hello.brl
-go run main.go ast examples/hello.brl
-go run main.go run examples/hello.brl
+go run main.go tokens examples/hello.brt
+go run main.go ast examples/hello.brt
+go run main.go run examples/hello.brt
 ```
 
 ---

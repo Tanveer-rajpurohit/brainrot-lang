@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"brainrot-lang/parser"
 	"brainrot-lang/lexer"
+	"brainrot-lang/parser"
 )
 
 // PrintProgram prints the full AST to the terminal in a readable tree format
@@ -167,19 +167,6 @@ func exprString(expr parser.Expression, _ string) string {
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // PrintLexicalTable prints a formatted lexical token table
 func PrintLexicalTable(tokens []lexer.Token) {
 	// Print header
@@ -230,22 +217,20 @@ func PrintLexicalTable(tokens []lexer.Token) {
 	fmt.Printf("\n%sTotal Tokens: %d%s\n\n", ColorBold, len(tokens), ColorReset)
 }
 
-
-
 func PrintHelp() {
 	fmt.Println(`
-Usage: brainrot <command> <file.brl>
+Usage: brainrot <command> <file.brt>
  
 Commands:
-  run     <file.brl>   Run a BrainRot program
-  tokens  <file.brl>   Debug: show token stream only
-  ast     <file.brl>   Debug: show AST tree only
+  run     <file.brt>   Run a BrainRot program
+  tokens  <file.brt>   Debug: show token stream only
+  ast     <file.brt>   Debug: show AST tree only
   help                 Show this message
  
 Examples:
-  brainrot run examples/hello.brl
-  brainrot tokens examples/hello.brl
-  brainrot ast examples/hello.brl
+  brainrot run examples/hello.brt
+  brainrot tokens examples/hello.brt
+  brainrot ast examples/hello.brt
  
 Keywords:
   trust_me_bro        → variable

@@ -119,9 +119,9 @@ You should see the help menu. ✅
 
 #### Step 5 — Run your first program
 ```powershell
-brainrot run examples/hello.brl
-brainrot run examples/fibonacci.brl
-brainrot run examples/fizzbuzz.brl
+brainrot run examples/hello.brt
+brainrot run examples/fibonacci.brt
+brainrot run examples/fizzbuzz.brt
 ```
 
 ---
@@ -165,9 +165,9 @@ You should see the help menu. ✅
 
 #### Step 5 — Run your first program
 ```bash
-brainrot run examples/hello.brl
-brainrot run examples/fibonacci.brl
-brainrot run examples/fizzbuzz.brl
+brainrot run examples/hello.brt
+brainrot run examples/fibonacci.brt
+brainrot run examples/fizzbuzz.brt
 ```
 
 ---
@@ -192,9 +192,9 @@ You should see the help menu. ✅
 
 #### Step 4 — Run your first program
 ```bash
-brainrot run examples/hello.brl
-brainrot run examples/fibonacci.brl
-brainrot run examples/fizzbuzz.brl
+brainrot run examples/hello.brt
+brainrot run examples/fibonacci.brt
+brainrot run examples/fizzbuzz.brt
 ```
 
 ---
@@ -202,23 +202,23 @@ brainrot run examples/fizzbuzz.brl
 ## 📟 CLI Commands
 
 ```bash
-brainrot run     <file.brl>   # Run a BrainRot program
-brainrot tokens  <file.brl>   # Debug: show token stream (Lexer output)
-brainrot ast     <file.brl>   # Debug: show AST tree (Parser output)
+brainrot run     <file.brt>   # Run a BrainRot program
+brainrot tokens  <file.brt>   # Debug: show token stream (Lexer output)
+brainrot ast     <file.brt>   # Debug: show AST tree (Parser output)
 brainrot help                 # Show help
 ```
 
 **Examples:**
 ```bash
-brainrot run examples/hello.brl
-brainrot run examples/ifelse.brl
-brainrot run examples/for.brl
-brainrot run examples/fizzbuzz.brl
-brainrot run examples/fibonacci.brl
+brainrot run examples/hello.brt
+brainrot run examples/ifelse.brt
+brainrot run examples/for.brt
+brainrot run examples/fizzbuzz.brt
+brainrot run examples/fibonacci.brt
 
 # Debug modes — great for understanding how the compiler works
-brainrot tokens examples/hello.brl
-brainrot ast examples/hello.brl
+brainrot tokens examples/hello.brt
+brainrot ast examples/hello.brt
 ```
 
 ---
@@ -242,7 +242,7 @@ go build -o brainrot main.go         # Mac / Linux
 powershell -ExecutionPolicy Bypass -File scripts/build.ps1
 
 # Run without building (dev mode)
-go run main.go run examples/hello.brl
+go run main.go run examples/hello.brt
 ```
 
 ---
@@ -278,11 +278,11 @@ brainrot-lang/
 │   └── utils.go               ← Token category helper
 │
 ├── examples/
-│   ├── hello.brl              ← Variables, print, booleans
-│   ├── ifelse.brl             ← Conditionals + else-if chains
-│   ├── for.brl                ← For loops
-│   ├── fizzbuzz.brl           ← Classic FizzBuzz
-│   └── fibonacci.brl          ← Recursion + functions
+│   ├── hello.brt              ← Variables, print, booleans
+│   ├── ifelse.brt             ← Conditionals + else-if chains
+│   ├── for.brt                ← For loops
+│   ├── fizzbuzz.brt           ← Classic FizzBuzz
+│   └── fibonacci.brt          ← Recursion + functions
 │
 ├── scripts/
 │   ├── build.ps1              ← Cross-platform build script
@@ -352,7 +352,7 @@ let_him_cook main() {
 ## 🏗️ Compiler Pipeline
 
 ```
-Source Code (.brl file)
+Source Code (.brt file)
         │
         ▼
 ┌─────────────┐

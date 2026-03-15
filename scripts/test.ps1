@@ -57,14 +57,14 @@ Write-Host "-- VALID TESTS (exit code + output match) --" -ForegroundColor Yello
 Write-Host ""
 
 foreach ($test in $validTests) {
-    $brlPath      = [System.IO.Path]::Combine((Get-Location).Path, "tests", "$test.brl")
+    $brlPath      = [System.IO.Path]::Combine((Get-Location).Path, "tests", "$test.brt")
     $expectedPath = [System.IO.Path]::Combine((Get-Location).Path, "tests", "expected", "$test.expected")
 
     $rawLines = & $BINARY run $brlPath 2>&1
     $exitCode = $LASTEXITCODE
 
     if ($exitCode -ne 0) {
-        Write-Host "  [FAIL] $test.brl  (crashed)" -ForegroundColor Red
+        Write-Host "  [FAIL] $test.brt  (crashed)" -ForegroundColor Red
         if ($rawLines.Count -gt $BANNER_LINES) {
             $rawLines[$BANNER_LINES..($rawLines.Count-1)] | ForEach-Object {
                 Write-Host "         $($_.Trim())" -ForegroundColor DarkRed
@@ -75,7 +75,7 @@ foreach ($test in $validTests) {
     }
 
     if (-not [System.IO.File]::Exists($expectedPath)) {
-        Write-Host "  [SKIP] $test.brl  (no .expected file)" -ForegroundColor Yellow
+        Write-Host "  [SKIP] $test.brt  (no .expected file)" -ForegroundColor Yellow
         continue
     }
 
@@ -83,10 +83,10 @@ foreach ($test in $validTests) {
     $expected = (Get-CleanExpected $expectedPath).Trim()
 
     if ($actual -eq $expected) {
-        Write-Host "  [PASS] $test.brl" -ForegroundColor Green
+        Write-Host "  [PASS] $test.brt" -ForegroundColor Green
         $pass++
     } else {
-        Write-Host "  [FAIL] $test.brl  (output mismatch)" -ForegroundColor Red
+        Write-Host "  [FAIL] $test.brt  (output mismatch)" -ForegroundColor Red
         $aLines = $actual   -split "`n"
         $eLines = $expected -split "`n"
         $max    = [Math]::Max($aLines.Count, $eLines.Count)
@@ -116,18 +116,18 @@ $errorTests = @(
 )
 
 foreach ($test in $errorTests) {
-    $path     = [System.IO.Path]::Combine((Get-Location).Path, "tests", "$($test.file).brl")
+    $path     = [System.IO.Path]::Combine((Get-Location).Path, "tests", "$($test.file).brt")
     $output   = (& $BINARY run $path 2>&1) -join " "
     $exitCode = $LASTEXITCODE
 
     if ($exitCode -ne 0 -and ($output -match $test.keyword)) {
-        Write-Host "  [PASS] $($test.file).brl - error caught" -ForegroundColor Green
+        Write-Host "  [PASS] $($test.file).brt - error caught" -ForegroundColor Green
         $pass++
     } elseif ($exitCode -eq 0) {
-        Write-Host "  [FAIL] $($test.file).brl - expected error but ran ok!" -ForegroundColor Red
+        Write-Host "  [FAIL] $($test.file).brt - expected error but ran ok!" -ForegroundColor Red
         $fail++
     } else {
-        Write-Host "  [FAIL] $($test.file).brl - wrong error (wanted: '$($test.keyword)')" -ForegroundColor Red
+        Write-Host "  [FAIL] $($test.file).brt - wrong error (wanted: '$($test.keyword)')" -ForegroundColor Red
         $fail++
     }
 }
@@ -138,10 +138,10 @@ Write-Host "-- CLI MODE TESTS (tokens / ast) --" -ForegroundColor Yellow
 Write-Host ""
 
 $cliTests = @(
-    @{ cmd = "tokens"; file = "examples\hello.brl";     label = "tokens - hello" },
-    @{ cmd = "ast";    file = "examples\hello.brl";     label = "ast    - hello" },
-    @{ cmd = "tokens"; file = "examples\fibonacci.brl"; label = "tokens - fibonacci" },
-    @{ cmd = "ast";    file = "examples\fibonacci.brl"; label = "ast    - fibonacci" }
+    @{ cmd = "tokens"; file = "examples\hello.brt";     label = "tokens - hello" },
+    @{ cmd = "ast";    file = "examples\hello.brt";     label = "ast    - hello" },
+    @{ cmd = "tokens"; file = "examples\fibonacci.brt"; label = "tokens - fibonacci" },
+    @{ cmd = "ast";    file = "examples\fibonacci.brt"; label = "ast    - fibonacci" }
 )
 
 foreach ($t in $cliTests) {

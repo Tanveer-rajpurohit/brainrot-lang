@@ -15,7 +15,7 @@ func main() {
 
 	utils.Banner()
 
-	// cml run command go run main.go run examples/hello.brl in no prod ./brainrot run examples/hello.brl
+	// cml run command go run main.go run examples/hello.brt in no prod ./brainrot run examples/hello.brt
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: go run main.go <command> [arguments]")
 		os.Exit(1)
