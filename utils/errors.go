@@ -12,7 +12,7 @@ type BRLError struct {
 
 func (e *BRLError) Error() string {
     return fmt.Sprintf(
-        "\nMeh kya ladle meow ghop ghop ghop \n [%s Error]\n   Line %d, Col %d → %s\n",
+        "\n[SKILL ISSUE]\n  [%s Error]\n  Line %d, Col %d → %s\n",
         e.Phase, e.Line, e.Column, e.Message,
     )
 }

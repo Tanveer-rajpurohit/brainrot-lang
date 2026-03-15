@@ -30,21 +30,21 @@ func main() {
 	switch command {
 	case "run":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: brainrot run <file.brl>")
+			fmt.Printf("%sFile nahi bhejega ke Meh kya ladle meow ghop ghop ghop%s\n", utils.ColorRed, utils.ColorReset)
 			os.Exit(1)
 		}
 		runFile(os.Args[2], false, false)
- 
+
 	case "tokens":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: brainrot tokens <file.brl>")
+			fmt.Printf("%sFile nahi bhejega ke Meh kya ladle meow ghop ghop ghop%s\n", utils.ColorRed, utils.ColorReset)
 			os.Exit(1)
 		}
 		runFile(os.Args[2], true, false)
- 
+
 	case "ast":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: brainrot ast <file.brl>")
+			fmt.Printf("%sFile nahi bhejega ke Meh kya ladle meow ghop ghop ghop%s\n", utils.ColorRed, utils.ColorReset)
 			os.Exit(1)
 		}
 		runFile(os.Args[2], false, true)
@@ -60,7 +60,7 @@ func main() {
 func runFile(filename string, showTokens bool, showAST bool) {
 	source, err := os.ReadFile(filename)
 	if err != nil {
-		utils.Fatal(utils.NewError("CLI", 0, 0, fmt.Sprintf("system open file '%s'", filename)))
+		fmt.Printf("%sFile nahi bhejega ke Meh kya ladle meow ghop ghop ghop%s\n", utils.ColorRed, utils.ColorReset)
 		os.Exit(1)
 	}
 

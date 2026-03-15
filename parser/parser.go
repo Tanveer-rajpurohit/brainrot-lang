@@ -67,7 +67,7 @@ func (p *Parser) Errors() []string {
 // addError records a structured [Skill Issue] error for the parser
 func (p *Parser) addError(msg string, line int) {
 	p.errors = append(p.errors, fmt.Sprintf(
-		"\n[Skill Issue]\nMeh kya ladle meow ghop ghop ghop \n [Parser Error]\n   Line %d, Col 0 → %s\n",
+		"\n[SKILL ISSUE]\n  [Parser Error]\n  Line %d → %s\n",
 		line, msg,
 	))
 }
