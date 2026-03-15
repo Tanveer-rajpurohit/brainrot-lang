@@ -48,88 +48,153 @@ let_him_cook main() {
 
 ## 📖 Keyword Reference
 
-| BrainRot Keyword     | Meaning           | Meme Origin              |
-|----------------------|-------------------|--------------------------|
-| `trust_me_bro`       | variable declare  | "trust me bro" Gen Z     |
-| `say_my_name(...)`   | print             | Breaking Bad — Heisenberg|
-| `chat_is_this_real`  | if                | "is this real?" caption  |
-| `wait_hold_up`       | else if           | "wait, hold up" reaction |
-| `nah_bro`            | else              | "nah bro" response       |
-| `on_repeat`          | while loop        | on repeat cycle          |
-| `run_it_back`        | for loop          | "run it back" sports     |
-| `let_him_cook`       | function define   | "let him cook" 2023      |
-| `take_this`          | return            | "take this" send-off     |
-| `mission_abort`      | break             | abort mission            |
-| `skip_this_one`      | continue          | "skip this one"          |
-| `fr_fr`              | true              | Gen Z "for real"         |
-| `cap`                | false             | cap/no cap meme          |
-| `ghosted`            | null/nil          | dating meme              |
+| BrainRot Keyword     | Meaning           | Meme Origin               |
+|----------------------|-------------------|---------------------------|
+| `trust_me_bro`       | variable declare  | "trust me bro" Gen Z      |
+| `say_my_name(...)`   | print             | Breaking Bad — Heisenberg |
+| `chat_is_this_real`  | if                | "is this real?" caption   |
+| `wait_hold_up`       | else if           | "wait, hold up" reaction  |
+| `nah_bro`            | else              | "nah bro" response        |
+| `on_repeat`          | while loop        | on repeat cycle           |
+| `run_it_back`        | for loop          | "run it back" sports      |
+| `let_him_cook`       | function define   | "let him cook" 2023       |
+| `take_this`          | return            | "take this" send-off      |
+| `mission_abort`      | break             | abort mission             |
+| `skip_this_one`      | continue          | "skip this one"           |
+| `fr_fr`              | true              | Gen Z "for real for real" |
+| `cap`                | false             | cap/no cap meme           |
+| `ghosted`            | null/nil          | dating meme               |
 
-Operators `==`, `!=`, `+`, `-`, `*`, `/`, `%`, `**`, `++`, `--`, `&&`, `||`, `!` stay the same.
+Operators `==`, `!=`, `+`, `-`, `*`, `/`, `%`, `**`, `++`, `--`, `&&`, `||`, `!` stay the same as normal.
 
 ---
 
 ## 🚀 Installation
 
-### Option 1 — Download Pre-built Binary (No Go needed)
+> **No Go installation needed.** Just download the binary for your OS and add it to PATH. That's it.
 
-1. Go to [Releases](../../releases) on GitHub
-2. Download the binary for your OS:
-   - `brainrot.exe` → Windows
-   - `brainrot-linux` → Linux
-   - `brainrot-mac` → Mac (Intel)
-   - `brainrot-mac-arm` → Mac (Apple Silicon)
-3. Add to PATH (see below)
+---
 
-**Windows — Add to PATH:**
+### 🪟 Windows
+
+#### Step 1 — Download the binary
+Go to [Releases](../../releases) and download **`brainrot.exe`**
+
+#### Step 2 — Create install folder and move binary
+
+Open **PowerShell** and run:
 ```powershell
-# Move brainrot.exe to a folder, e.g. C:\brainrot\
-# Then add to PATH:
-[System.Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\brainrot", "User")
-# Restart terminal, then:
-brainrot run hello.brl
+mkdir C:\Users\$env:USERNAME\brainrot
+move brainrot.exe C:\Users\$env:USERNAME\brainrot\
 ```
 
-**Mac/Linux — Add to PATH:**
+This creates `C:\Users\YourName\brainrot\` and moves the binary there.
+
+#### Step 3 — Add to PATH
+
+**PowerShell method (recommended):**
+```powershell
+[System.Environment]::SetEnvironmentVariable(
+    "PATH",
+    $env:PATH + ";C:\Users\$env:USERNAME\brainrot",
+    "User"
+)
+```
+
+**Manual (GUI method):**
+1. Press `Windows + S` → search **"Environment Variables"**
+2. Click **Edit the system environment variables**
+3. Click the **Environment Variables** button
+4. Under **User variables** → click `Path` → click **Edit**
+5. Click **New** → type `C:\Users\YourName\brainrot` (replace `YourName` with your actual Windows username)
+6. Click **OK** → **OK** → **OK**
+
+#### Step 4 — Restart terminal and verify
+**Close PowerShell/terminal completely and reopen it**, then:
+```powershell
+brainrot help
+```
+
+You should see the help menu. ✅
+
+#### Step 5 — Run your first program
+```powershell
+brainrot run examples/hello.brl
+brainrot run examples/fibonacci.brl
+brainrot run examples/fizzbuzz.brl
+```
+
+---
+
+### 🍎 Mac (Intel + Apple Silicon)
+
+#### Step 1 — Download the binary
+Go to [Releases](../../releases) and download:
+- **`brainrot-mac`** → Mac Intel (x86_64)
+- **`brainrot-mac-arm`** → Mac Apple Silicon (M1 / M2 / M3)
+
+#### Step 2 — Open Terminal and install
+
+**Intel Mac:**
 ```bash
-# Move binary to /usr/local/bin
-sudo mv brainrot-linux /usr/local/bin/brainrot
+sudo mv ~/Downloads/brainrot-mac /usr/local/bin/brainrot
 sudo chmod +x /usr/local/bin/brainrot
-# Now use from anywhere:
-brainrot run hello.brl
+```
+
+**Apple Silicon (M1 / M2 / M3):**
+```bash
+sudo mv ~/Downloads/brainrot-mac-arm /usr/local/bin/brainrot
+sudo chmod +x /usr/local/bin/brainrot
+```
+
+#### Step 3 — Allow Mac to run it (first time only)
+
+Mac blocks downloaded binaries by default. Run this once:
+```bash
+xattr -d com.apple.quarantine /usr/local/bin/brainrot
+```
+
+If you see a popup instead — go to **System Settings → Privacy & Security → General** and click **Allow Anyway**.
+
+#### Step 4 — Verify
+```bash
+brainrot help
+```
+
+You should see the help menu. ✅
+
+#### Step 5 — Run your first program
+```bash
+brainrot run examples/hello.brl
+brainrot run examples/fibonacci.brl
+brainrot run examples/fizzbuzz.brl
 ```
 
 ---
 
-### Option 2 — Build From Source (Go required)
+### 🐧 Linux
 
+#### Step 1 — Download the binary
+Go to [Releases](../../releases) and download **`brainrot-linux`**
+
+#### Step 2 — Open terminal and install
 ```bash
-# 1. Install Go from https://go.dev/dl/
-# 2. Clone the repo
-git clone https://github.com/Tanveer-rajpurohit/brainrot-lang.git
-cd brainrot-lang
-
-# 3. Build for your OS
-go build -o brainrot main.go          # Mac/Linux
-go build -o brainrot.exe main.go      # Windows
-
-# 4. Run a program
-./brainrot run examples/hello.brl
+sudo mv ~/Downloads/brainrot-linux /usr/local/bin/brainrot
+sudo chmod +x /usr/local/bin/brainrot
 ```
 
-**Or run without building (development mode):**
+#### Step 3 — Verify
 ```bash
-go run main.go run examples/hello.brl
+brainrot help
 ```
 
----
+You should see the help menu. ✅
 
-### Option 3 — Build All Platforms at Once
-
-```powershell
-# Windows (PowerShell)
-powershell -ExecutionPolicy Bypass -File scripts/build.ps1
-# Outputs: dist/brainrot.exe, dist/brainrot-linux, dist/brainrot-mac, dist/brainrot-mac-arm
+#### Step 4 — Run your first program
+```bash
+brainrot run examples/hello.brl
+brainrot run examples/fibonacci.brl
+brainrot run examples/fizzbuzz.brl
 ```
 
 ---
@@ -141,6 +206,43 @@ brainrot run     <file.brl>   # Run a BrainRot program
 brainrot tokens  <file.brl>   # Debug: show token stream (Lexer output)
 brainrot ast     <file.brl>   # Debug: show AST tree (Parser output)
 brainrot help                 # Show help
+```
+
+**Examples:**
+```bash
+brainrot run examples/hello.brl
+brainrot run examples/ifelse.brl
+brainrot run examples/for.brl
+brainrot run examples/fizzbuzz.brl
+brainrot run examples/fibonacci.brl
+
+# Debug modes — great for understanding how the compiler works
+brainrot tokens examples/hello.brl
+brainrot ast examples/hello.brl
+```
+
+---
+
+## 🛠️ Build From Source (For Developers)
+
+> Only needed if you want to modify the language itself. Regular users skip this.
+
+**Requires:** Go 1.22+ from [https://go.dev/dl/](https://go.dev/dl/)
+
+```bash
+# Clone
+git clone https://github.com/Tanveer-rajpurohit/brainrot-lang.git
+cd brainrot-lang
+
+# Build for your current OS
+go build -o brainrot.exe main.go     # Windows
+go build -o brainrot main.go         # Mac / Linux
+
+# Build for ALL platforms at once (Windows PowerShell)
+powershell -ExecutionPolicy Bypass -File scripts/build.ps1
+
+# Run without building (dev mode)
+go run main.go run examples/hello.brl
 ```
 
 ---
@@ -160,12 +262,12 @@ brainrot-lang/
 │   ├── ast.go                 ← AST node types
 │   ├── parser.go              ← Recursive descent parser (Unit III)
 │   ├── parseFunc.go           ← Statement parsing functions
-│   └── parseExpr.go           ← Expression parsing chain
+│   └── parseExpr.go           ← Expression parsing + precedence chain
 │
 ├── interpreter/
 │   ├── interpreter.go         ← Interpreter struct + signals
 │   ├── environment.go         ← Symbol table + scope chain (Unit V)
-│   ├── evalStmt.go            ← Statement evaluator
+│   ├── evalStmt.go            ← Statement evaluator + program entry
 │   ├── evalExpr.go            ← Expression evaluator
 │   └── helpers.go             ← isTruthy, evalInfix, formatValue
 │
@@ -183,12 +285,14 @@ brainrot-lang/
 │   └── fibonacci.brl          ← Recursion + functions
 │
 ├── scripts/
-│   ├── build.ps1              ← Cross-platform build (Windows)
+│   ├── build.ps1              ← Cross-platform build script
 │   └── test.ps1               ← Automated test runner
 │
-├── dist/                      ← Pre-built binaries (gitignored)
+├── dist/                      ← Pre-built binaries
+├── Makefile                   ← Dev shortcuts (make run, make test)
 ├── go.mod
 ├── LICENSE
+├── PROJECT.md                 ← Full technical project documentation
 └── README.md
 ```
 
@@ -204,22 +308,27 @@ let_him_cook main() {
 }
 ```
 
-### FizzBuzz
+### If / Else If / Else
 ```brainrot
 let_him_cook main() {
-    run_it_back (trust_me_bro i = 1; i <= 20; i += 1) {
-        chat_is_this_real (i % 15 == 0) {
-            say_my_name("FizzBuzz no cap")
-        }
-        wait_hold_up (i % 3 == 0) {
-            say_my_name("Fizz fr fr")
-        }
-        wait_hold_up (i % 5 == 0) {
-            say_my_name("Buzz W")
-        }
-        nah_bro {
-            say_my_name(i)
-        }
+    trust_me_bro score = 85
+    chat_is_this_real (score >= 90) {
+        say_my_name("S tier no cap")
+    }
+    wait_hold_up (score >= 75) {
+        say_my_name("pretty mid ngl")
+    }
+    nah_bro {
+        say_my_name("ur cooked bro")
+    }
+}
+```
+
+### For Loop
+```brainrot
+let_him_cook main() {
+    run_it_back (trust_me_bro i = 0; i < 5; i += 1) {
+        say_my_name("grind " + i)
     }
 }
 ```
@@ -269,7 +378,7 @@ Source Code (.brl file)
 
 ---
 
-## 🎓 Syllabus Coverage
+## 🎓 Syllabus Coverage (CE5023)
 
 | Syllabus Unit | Topic | Implemented In |
 |---|---|---|
@@ -280,14 +389,10 @@ Source Code (.brl file)
 
 ---
 
-## 🛠️ Built With
-
-Go 1.22+ — zero external dependencies, pure standard library.
-
----
-
 ## 📄 License
 
 MIT — do whatever you want, no cap.
+
+---
 
 ## ⭐ Give it a star if you fw it!
