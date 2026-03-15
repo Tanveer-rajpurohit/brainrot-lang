@@ -1,0 +1,13 @@
+let_him_cook fib(n) {
+    chat_is_this_real (n <= 1) {
+        take_this n
+    }
+    take_this fib(n - 1) + fib(n - 2)
+}
+
+let_him_cook main() {
+    say_my_name("=== Fibonacci Sequence ===")
+    run_it_back (trust_me_bro i = 0; i < 10; i += 1) {
+        say_my_name(fib(i))
+    }
+}
