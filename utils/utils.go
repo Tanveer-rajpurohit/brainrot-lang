@@ -11,7 +11,7 @@ func GetTokenCategory(tokType lexer.TokenType) string {
 		tokType == lexer.WHILE || tokType == lexer.FOR || tokType == lexer.FUNC ||
 		tokType == lexer.RETURN || tokType == lexer.PRINT || tokType == lexer.TRUE ||
 		tokType == lexer.FALSE || tokType == lexer.NIL || tokType == lexer.BREAK ||
-		tokType == lexer.CONTINUE {
+		tokType == lexer.CONTINUE || tokType == lexer.ELSE_IF {
 		return "KEYWORD"
 	}
 
@@ -21,8 +21,7 @@ func GetTokenCategory(tokType lexer.TokenType) string {
 	}
 
 	// Operators
-	if tokType == lexer.PLUS || tokType == lexer.MINUS || tokType == lexer.ASTERISK ||
-		tokType == lexer.SLASH || tokType == lexer.PERCENT || tokType == lexer.POWER {
+	if tokType == lexer.PLUS || tokType == lexer.MINUS || tokType == lexer.ASTERISK || tokType == lexer.SLASH || tokType == lexer.PERCENT || tokType == lexer.POWER || tokType == lexer.INCREMENT || tokType == lexer.DECREMENT {          
 		return "OPERATOR"
 	}
 
@@ -38,7 +37,7 @@ func GetTokenCategory(tokType lexer.TokenType) string {
 	}
 
 	// Assignment
-	if tokType == lexer.ASSIGN || tokType == lexer.PLUS_ASSIGN || tokType == lexer.MINUS_ASSIGN {
+	if tokType == lexer.ASSIGN || tokType == lexer.PLUS_ASSIGN || tokType == lexer.MINUS_ASSIGN || tokType == lexer.ASTERISK_ASSIGN || tokType == lexer.SLASH_ASSIGN {                                       
 		return "ASSIGNMENT"
 	}
 

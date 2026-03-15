@@ -122,10 +122,8 @@ func (p *Parser) parseFuncStatement() *FuncStatement {
 			p.expect(lexer.COMMA)
 			stmt.Params = append(stmt.Params, p.expect(lexer.IDENT).Literal)
 		}
-		p.expect(lexer.RPAREN)
-	} else {
-		p.expect(lexer.RPAREN)
 	}
+	p.expect(lexer.RPAREN)
 
 	stmt.Body = p.parseBlockStatement()
 
