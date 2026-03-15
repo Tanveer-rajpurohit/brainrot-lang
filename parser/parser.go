@@ -73,4 +73,7 @@ func (p *Parser) skipNewlines() { // skip NEWLINE tokens between statements
 } 
 
 
-func (p *Parser) Parse() *Program {}
+func (p *Parser) Parse() *Program {
+	program := &Program{}
+	return program
+}
