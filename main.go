@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"brainrot-lang/interpreter"
 	"brainrot-lang/lexer"
 	"brainrot-lang/parser"
 	"brainrot-lang/utils"
@@ -17,6 +18,7 @@ func main() {
 	// cml run command go run main.go run examples/hello.brl in no prod ./brainrot run examples/hello.brl
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: go run main.go <command> [arguments]")
+		os.Exit(1)
 	}
 
 	command := os.Args[1]
@@ -28,55 +30,80 @@ func main() {
 	switch command {
 	case "run":
 		if len(os.Args) < 3 {
-			fmt.Println("Usage: go run main.go run <file.brl>")
+			fmt.Println("Usage: brainrot run <file.brl>")
 			os.Exit(1)
 		}
-		filename := os.Args[2]
-		fmt.Printf("Running file: %s\n", filename)
-		runFile(filename)
-
-	case "build":
-
+		runFile(os.Args[2], false, false)
+ 
+	case "tokens":
+		if len(os.Args) < 3 {
+			fmt.Println("Usage: brainrot tokens <file.brl>")
+			os.Exit(1)
+		}
+		runFile(os.Args[2], true, false)
+ 
+	case "ast":
+		if len(os.Args) < 3 {
+			fmt.Println("Usage: brainrot ast <file.brl>")
+			os.Exit(1)
+		}
+		runFile(os.Args[2], false, true)
+ 
 	case "help":
+		utils.PrintHelp()
 
 	default:
 		fmt.Printf("Unknown command: %s\n", command)
 	}
 }
 
-func runFile(filename string) {
+func runFile(filename string, showTokens bool, showAST bool) {
 	source, err := os.ReadFile(filename)
 	if err != nil {
-		utils.Fatal(utils.NewError("CLI", 0, 0, fmt.Sprintf("system cannot find the file '%s'", filename)))
+		utils.Fatal(utils.NewError("CLI", 0, 0, fmt.Sprintf("system open file '%s'", filename)))
 		os.Exit(1)
 	}
 
-	utils.Info(fmt.Sprintf("Running: %s", filename))
-	fmt.Println()
-	fmt.Printf("%sSource Code:%s\n%s\n", utils.ColorCyan, utils.ColorReset, string(source))
-
+	
 	// Step 1: Lexer
-	fmt.Printf("\n%s[LEXER OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
 	l := lexer.New(string(source))
 	tokens := l.Tokenize()
-
-	// Print lexical table
-	utils.PrintLexicalTable(tokens)
+ 
+	if showTokens {
+		fmt.Printf("%s[LEXER OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
+		utils.PrintLexicalTable(tokens)
+	}
 
 	// Step 2: Parser
 	p := parser.New(tokens)
 	program := p.Parse()
-
-	// If there are parser errors, print them and exit — no AST output
+ 
 	if errs := p.Errors(); len(errs) > 0 {
-		fmt.Printf("\n%s[PARSER ERRORS]%s\n", utils.ColorRed, utils.ColorReset)
+		fmt.Printf("%s[PARSER ERRORS]%s\n", utils.ColorRed, utils.ColorReset)
 		for _, e := range errs {
 			fmt.Println(e)
 		}
 		os.Exit(1)
 	}
-
-	// Log the AST only when there are no errors
-	fmt.Printf("\n%s[AST OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
-	utils.PrintProgram(program)
+ 
+	if showAST {
+		fmt.Printf("%s[AST OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
+		utils.PrintProgram(program)
+		return
+	}
+ 
+	// Step 3: Interpreter
+	interp := interpreter.New()
+	interp.Eval(program)
+ 
+	if errs := interp.Errors(); len(errs) > 0 {
+		fmt.Printf("\n%s[RUNTIME ERRORS]%s\n", utils.ColorRed, utils.ColorReset)
+		for _, e := range errs {
+			fmt.Printf("%s%s%s\n", utils.ColorRed, e, utils.ColorReset)
+		}
+		os.Exit(1)
+	}
 }
+
+
+

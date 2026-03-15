@@ -172,6 +172,14 @@ func exprString(expr parser.Expression, _ string) string {
 
 
 
+
+
+
+
+
+
+
+
 // PrintLexicalTable prints a formatted lexical token table
 func PrintLexicalTable(tokens []lexer.Token) {
 	// Print header
@@ -220,4 +228,38 @@ func PrintLexicalTable(tokens []lexer.Token) {
 	// Print footer
 	fmt.Printf("%s└─────┴──────────────┴──────────────┴─────────────────┴────────┘%s\n", ColorBlue, ColorReset)
 	fmt.Printf("\n%sTotal Tokens: %d%s\n\n", ColorBold, len(tokens), ColorReset)
+}
+
+
+
+func PrintHelp() {
+	fmt.Println(`
+Usage: brainrot <command> <file.brl>
+ 
+Commands:
+  run     <file.brl>   Run a BrainRot program
+  tokens  <file.brl>   Debug: show token stream only
+  ast     <file.brl>   Debug: show AST tree only
+  help                 Show this message
+ 
+Examples:
+  brainrot run examples/hello.brl
+  brainrot tokens examples/hello.brl
+  brainrot ast examples/hello.brl
+ 
+Keywords:
+  trust_me_bro        → variable
+  say_my_name(...)    → print
+  chat_is_this_real   → if
+  wait_hold_up        → else if
+  nah_bro             → else
+  on_repeat           → while
+  run_it_back         → for
+  let_him_cook        → function
+  take_this           → return
+  mission_abort       → break
+  skip_this_one       → continue
+  fr_fr / cap         → true / false
+  ghosted             → nil
+	`)
 }
