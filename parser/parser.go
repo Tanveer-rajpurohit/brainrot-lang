@@ -59,6 +59,11 @@ func (p *Parser) skipNewlines() { // skip NEWLINE tokens between statements
 	}
 }
 
+// Errors returns all parser errors collected during Parse()
+func (p *Parser) Errors() []string {
+	return p.errors
+}
+
 // addError records a structured [Skill Issue] error for the parser
 func (p *Parser) addError(msg string, line int) {
 	p.errors = append(p.errors, fmt.Sprintf(

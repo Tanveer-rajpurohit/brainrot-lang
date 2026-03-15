@@ -1,12 +1,8 @@
-let_him_cook main(){
+let_him_cook main() {
     trust_me_bro name = "Walter White"
     trust_me_bro age = 52
-    say_my_name("my name is " + name)
+    trust_me_bro alive = fr_fr
 
-    chat_is_this_real age >= 18 {
-        say_my_name("ur built different")
-    }
-    nah_bro {
-        say_my_name("ur cooked bro")
-    }
+    say_my_name("yo the name is " + name)
+
 }

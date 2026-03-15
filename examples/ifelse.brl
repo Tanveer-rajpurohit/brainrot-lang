@@ -1,0 +1,16 @@
+let_him_cook main() {
+    trust_me_bro score = 85
+
+    chat_is_this_real (score >= 90) {
+        say_my_name("S tier no cap W rizz")
+    }
+    wait_hold_up (score >= 75) {
+        say_my_name("pretty mid ngl but you tried")
+    }
+    wait_hold_up (score >= 60) {
+        say_my_name("sus ahh score fr")
+    }
+    nah_bro {
+        say_my_name("massive L ratio bro ur cooked")
+    }
+}

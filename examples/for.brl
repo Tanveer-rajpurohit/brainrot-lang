@@ -1,0 +1,9 @@
+let_him_cook main() {
+    say_my_name("starting the grind fr fr")
+
+    run_it_back (trust_me_bro i = 0; i < 5; i += 1) {
+        say_my_name("done" + i)
+    }
+
+    say_my_name("grind complete W")
+}

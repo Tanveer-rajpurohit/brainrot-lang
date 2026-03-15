@@ -67,7 +67,16 @@ func runFile(filename string) {
 	p := parser.New(tokens)
 	program := p.Parse()
 
-	//log the AST
+	// If there are parser errors, print them and exit — no AST output
+	if errs := p.Errors(); len(errs) > 0 {
+		fmt.Printf("\n%s[PARSER ERRORS]%s\n", utils.ColorRed, utils.ColorReset)
+		for _, e := range errs {
+			fmt.Println(e)
+		}
+		os.Exit(1)
+	}
+
+	// Log the AST only when there are no errors
 	fmt.Printf("\n%s[AST OUTPUT]%s\n", utils.ColorGreen, utils.ColorReset)
 	utils.PrintProgram(program)
 }

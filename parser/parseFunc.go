@@ -85,6 +85,7 @@ func (p *Parser) parseWhileStatement() *WhileStatement {
 func (p *Parser) parseForStatement() *ForStatement {
 	stmt := &ForStatement{stmtNode: stmtNode{Line: p.current().Line}}
 	p.expect(lexer.FOR)
+	p.expect(lexer.LPAREN)
 
 	// trust_me_bro i = 0; i < 10; i += 1
 	if p.current().Type == lexer.VAR { //trust_me_bro i = 0
@@ -92,10 +93,7 @@ func (p *Parser) parseForStatement() *ForStatement {
 	} else if p.current().Type == lexer.IDENT {
 		stmt.Init = p.parseAssignStatement() // i = 0
 	} else {
-		p.errors = append(p.errors, fmt.Sprintf(
-			"[Skill Issue] \nexpected variable declaration or assignment but got '%s' at line %d",
-			p.current().Literal, p.current().Line,
-		))
+		p.addError(fmt.Sprintf("expected variable declaration or assignment but got '%s'", p.current().Literal), p.current().Line)
 	}
 
 	p.expect(lexer.SEMICOLON)
@@ -103,6 +101,7 @@ func (p *Parser) parseForStatement() *ForStatement {
 	p.expect(lexer.SEMICOLON)
 	stmt.Post = p.parseAssignStatement() // i += 1
 
+	p.expect(lexer.RPAREN)
 	stmt.Body = p.parseBlockStatement()
 
 	return stmt
@@ -191,10 +190,7 @@ func (p *Parser) parseAssignStatement() *AssignStatement {
 		p.advance()
 
 	default:
-		p.errors = append(p.errors, fmt.Sprintf(
-			"[Skill Issue] \nexpected assignment operator but got '%s' at line %d",
-			p.current().Literal, p.current().Line,
-		))
+		p.addError(fmt.Sprintf("expected assignment operator but got '%s'", p.current().Literal), p.current().Line)
 	}
 
 	stmt.Value = p.parseExpression()
