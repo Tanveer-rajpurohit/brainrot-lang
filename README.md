@@ -9,8 +9,6 @@
 
 BrainRot Lang is a fully working **interpreted programming language** built from scratch in Go. Every keyword is a real internet meme. It implements a complete compiler pipeline — Lexer → Parser → AST → Interpreter — covering all major phases of compiler design.
 
-Built as a **Compiler Design mini project** (CE5023, Semester VI, Uka Tarsadia University).
-
 ---
 
 ## 🔥 What Does It Look Like?
@@ -256,17 +254,17 @@ brainrot-lang/
 │
 ├── lexer/
 │   ├── token.go               ← Token type definitions
-│   └── lexer.go               ← DFA-based tokenizer (Unit II)
+│   └── lexer.go               ← DFA-based tokenizer
 │
 ├── parser/
 │   ├── ast.go                 ← AST node types
-│   ├── parser.go              ← Recursive descent parser (Unit III)
+│   ├── parser.go              ← Recursive descent parser
 │   ├── parseFunc.go           ← Statement parsing functions
 │   └── parseExpr.go           ← Expression parsing + precedence chain
 │
 ├── interpreter/
 │   ├── interpreter.go         ← Interpreter struct + signals
-│   ├── environment.go         ← Symbol table + scope chain (Unit V)
+│   ├── environment.go         ← Symbol table + scope chain
 │   ├── evalStmt.go            ← Statement evaluator + program entry
 │   ├── evalExpr.go            ← Expression evaluator
 │   └── helpers.go             ← isTruthy, evalInfix, formatValue
@@ -357,35 +355,24 @@ Source Code (.brt file)
         ▼
 ┌─────────────┐
 │    LEXER    │  Tokenizes raw text → stream of tokens
-│  (Unit II)  │  DFA-based scanner, recognizes all keywords
+│             │  DFA-based scanner, recognizes all keywords
 └──────┬──────┘
        │  []Token
        ▼
 ┌─────────────┐
 │   PARSER    │  Builds Abstract Syntax Tree from tokens
-│  (Unit III) │  Recursive descent, LL(1) parsing
+│             │  Recursive descent, LL(1) parsing
 └──────┬──────┘
        │  AST
        ▼
 ┌─────────────────┐
 │  INTERPRETER    │  Walks AST and executes the program
-│   (Unit V)      │  Symbol tables, scope chains, closures
+│                 │  Symbol tables, scope chains, closures
 └─────────────────┘
        │
        ▼
    Program Output
 ```
-
----
-
-## 🎓 Syllabus Coverage (CE5023)
-
-| Syllabus Unit | Topic | Implemented In |
-|---|---|---|
-| Unit I | Compiler phases, types, tools | Entire pipeline |
-| Unit II | Lexical analysis, DFA, tokens | `lexer/lexer.go` |
-| Unit III | CFG, recursive descent, LL(1), AST | `parser/` |
-| Unit V | Symbol tables, scope, runtime env | `interpreter/environment.go` |
 
 ---
 
